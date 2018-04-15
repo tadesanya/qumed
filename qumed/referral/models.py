@@ -23,13 +23,13 @@ class Patient(models.Model):
 
 class Referral(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    patient = models.ForeignKey(Patient)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     status = models.CharField(max_length=char_length_16, choices=APPOINTMENT_STATUS)
     notes = models.TextField()
 
     date_referred = models.DateField(auto_now_add=True)
-    referred_by = models.ForeignKey(Practice)
-    referred_to = models.ForeignKey(Practice)
+    referred_by = models.ManyToManyField(Practice, related_name='outgoing_referrals')
+    referred_to = models.ManyToManyField(Practice, related_name='incoming_referrals')
     reason_for_referral = models.CharField(max_length=char_length_128)
 
     first_attempt = models.DateTimeField(null=True, blank=True)
