@@ -18,7 +18,7 @@ Here you set environment variables:
 ```python
 SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 DEBUG=True
-DATABASE_URL=postgres://user:password@host:5432/mydb
+DATABASE_URL=postgres://<database_user>:<database_password>@<database_host>:<database_port>/<database_name>
 ```
 
 While in your virtualenvwrapper, install all the packages needed
