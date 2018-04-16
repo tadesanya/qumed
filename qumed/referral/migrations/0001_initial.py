@@ -52,4 +52,11 @@ class Migration(migrations.Migration):
                 ('referred_to', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='incoming_referrals', to='referral.Practice')),
             ],
         ),
+        migrations.RunSQL(
+            """
+            ALTER TABLE referral_referral ADD CONSTRAINT check_practice_cannot_refer_to_self CHECK (
+                referral_referral.referred_by_id != referral_referral.referred_to_id
+            );
+            """
+        ),
     ]
