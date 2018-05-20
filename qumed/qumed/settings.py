@@ -24,6 +24,11 @@ env = environ.Env(
     DEBUG=(bool, False),
     HOSTS=(list, ['127.0.0.1']),
     DATABASE_URL=str,
+    EMAIL_HOST=str,
+    EMAIL_PORT=int,
+    EMAIL_HOST_USER=str,
+    EMAIL_HOST_PASSWORD=str,
+    EMAIL_USE_TLS=(bool, True),
 )
 
 # Quick-start development settings - unsuitable for production
@@ -143,3 +148,10 @@ AUTH_USER_MODEL = 'account.User'
 # Authentication
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
+
+# Email
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')

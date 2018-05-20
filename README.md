@@ -19,6 +19,12 @@ Here you set environment variables:
 SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 DEBUG=True
 DATABASE_URL=postgres://<database_user>:<database_password>@<database_host>:<database_port>/<database_name>
+HOSTS=127.0.0.1,localhost,localhost:8000,127.0.0.1:8000
+EMAIL_wdHOST=XXXXXXXXXXXXXXXXXXX
+EMAIL_PORT=XXX
+EMAIL_HOST_USER=XXXXXXXXXXXX
+EMAIL_HOST_PASSWORD=XXXXXXXXXXXXXXXXXXX
+EMAIL_USE_TLS=True
 ```
 
 While in your virtualenvwrapper, install all the packages needed
