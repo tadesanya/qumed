@@ -18,7 +18,16 @@ from django.views.generic import TemplateView
 from . import views
 
 
+app_name = 'account'
+
 urlpatterns = [
     path('dashboard/', TemplateView.as_view(template_name='dashboard.html'), name='dashboard'),
-    path('signup/', views.SignUp.as_view(), name='signup')
+    path('signup/', views.SignUp.as_view(), name='signup'),
+    path('activate/<uidb64>/<token>/', views.ActivateAccount.as_view(), name='activate_account'),
+    path('activation_complete/',
+         TemplateView.as_view(template_name='registration/activation_complete.html'), name='activation_complete'),
+    path('activation_fail/',
+         TemplateView.as_view(template_name='registration/activate.html'), name='activation_fail'),
+    path('registration_complete/',
+         TemplateView.as_view(template_name='registration/registration_complete.html'), name='registration_complete')
 ]
