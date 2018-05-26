@@ -149,7 +149,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 AUTH_USER_MODEL = 'account.User'
 
 # Authentication
-LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_REDIRECT_URL = 'account:dashboard'
 LOGOUT_REDIRECT_URL = 'home'
 
 # Email
