@@ -14,6 +14,9 @@ import os
 
 import environ
 
+from django.contrib.messages import constants as messages
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,8 +25,13 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 env = environ.Env(
     SECRET_KEY=str,
     DEBUG=(bool, False),
-    ALLOWED_HOSTS=(list, ['127.0.0.1:8000']),
+    HOSTS=(list, ['127.0.0.1']),
     DATABASE_URL=str,
+    EMAIL_HOST=str,
+    EMAIL_PORT=int,
+    EMAIL_HOST_USER=str,
+    EMAIL_HOST_PASSWORD=str,
+    EMAIL_USE_TLS=(bool, True),
 )
 
 # Quick-start development settings - unsuitable for production
@@ -35,11 +43,9 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = env('ALLOWED_HOSTS')
-
+ALLOWED_HOSTS = env('HOSTS')
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -50,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'phonenumber_field',
     'referral',
+    'account',
 ]
 
 MIDDLEWARE = [
@@ -68,7 +75,7 @@ ROOT_URLCONF = 'qumed.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,3 +144,26 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Custom User
+AUTH_USER_MODEL = 'account.User'
+
+# Authentication
+LOGIN_REDIRECT_URL = 'account:dashboard'
+LOGOUT_REDIRECT_URL = 'home'
+
+# Email
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+
+# Messages Framework
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
