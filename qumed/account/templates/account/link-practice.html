@@ -7,7 +7,13 @@
 {% endblock breadcrumb %}
 
 {% block content %}
-  <div class="row">
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <strong class="text-secondary">You are not associated with a practice yet!</strong>
+    </div>
+  </div>
+
+  <div class="row mb-3">
     <div class="col-md-2">
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#joinPracticeModal">Join a Practice</button>
       
@@ -22,10 +28,11 @@
               </button>
             </div>
             <form action="" method="post">
+              {% csrf_token %}
               <div class="modal-body">
                   <div class="form-group">
                     <label for="practiceID">Practice ID:</label>
-                    <input type="text" class="form-control" id="practiceID" placeholder="Enter practice ID">
+                    <input type="text" class="form-control" id="practiceID" name="practiceID" placeholder="Enter practice ID">
                   </div>
 
               </div>

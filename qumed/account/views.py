@@ -87,10 +87,14 @@ class LinkPracticeView(LoginRequiredMixin, View):
             try:
                 practice = Practice.objects.get(id=form.cleaned_data['practiceID'])
             except ObjectDoesNotExist:
-                messages.error(request, 'No practice found with this id.')
+                messages.error(request, 'No practice found with this ID.')
                 return render(request, self.template_name)
 
             request.user.practice = practice
             request.user.save()
             messages.info(request, 'You have been added to the practice {}'.format(practice.name))
             return HttpResponseRedirect(reverse_lazy('account:dashboard'))
+        else:
+            message = form.errors
+            messages.error(request, message)
+            return render(request, self.template_name)
