@@ -15,3 +15,7 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = User
         fields = UserChangeForm.Meta.fields
+
+
+class LinkPracticeForm(forms.Form):
+    practiceID = forms.UUIDField()

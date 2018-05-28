@@ -9,12 +9,14 @@ from django.core.mail import EmailMessage
 from django.http import HttpResponseRedirect
 from django.contrib.auth import login, get_user_model
 from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
 
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, LinkPracticeForm
 from .tokens import account_activation_token
+from referral.models import Practice
 
 
-class SignUp(generic.CreateView):
+class SignUpView(generic.CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('account:registration_complete')
     template_name = 'signup.html'
@@ -40,7 +42,7 @@ class SignUp(generic.CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class ActivateAccount(View):
+class ActivateAccountView(View):
     def get(self, request, *args, **kwargs):
         User = get_user_model()
 
@@ -63,8 +65,32 @@ class ActivateAccount(View):
             return HttpResponseRedirect(reverse_lazy('account:activation_fail'))
 
 
-class Dashboard(View):
+class DashboardView(View):
     template_name = 'dashboard.html'
 
     def get(self, request, *args, **kwargs):
+        if request.user.practice is None:
+            return HttpResponseRedirect(reverse_lazy('account:link_practice'))
         return render(request, self.template_name)
+
+
+class LinkPracticeView(View):
+    template_name = 'account/link-practice.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        form = LinkPracticeForm(request.POST)
+        if form.is_valid():
+            try:
+                practice = Practice.objects.get(id=form.cleaned_data['practiceID'])
+            except ObjectDoesNotExist:
+                messages.error(request, 'No practice found with this id.')
+                return render(request, self.template_name)
+
+            request.user.practice = practice
+            request.user.save()
+            messages.info(request, 'You have been added to the practice {}'.format(practice.name))
+            return HttpResponseRedirect(reverse_lazy('account:dashboard'))
+

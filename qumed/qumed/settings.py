@@ -151,6 +151,7 @@ AUTH_USER_MODEL = 'account.User'
 # Authentication
 LOGIN_REDIRECT_URL = 'account:dashboard'
 LOGOUT_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
 
 # Email
 EMAIL_HOST = env('EMAIL_HOST')
