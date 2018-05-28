@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import login, get_user_model
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import CustomUserCreationForm, LinkPracticeForm
 from .tokens import account_activation_token
@@ -65,7 +66,7 @@ class ActivateAccountView(View):
             return HttpResponseRedirect(reverse_lazy('account:activation_fail'))
 
 
-class DashboardView(View):
+class DashboardView(LoginRequiredMixin, View):
     template_name = 'dashboard.html'
 
     def get(self, request, *args, **kwargs):
@@ -74,7 +75,7 @@ class DashboardView(View):
         return render(request, self.template_name)
 
 
-class LinkPracticeView(View):
+class LinkPracticeView(LoginRequiredMixin, View):
     template_name = 'account/link-practice.html'
 
     def get(self, request):
@@ -93,4 +94,3 @@ class LinkPracticeView(View):
             request.user.save()
             messages.info(request, 'You have been added to the practice {}'.format(practice.name))
             return HttpResponseRedirect(reverse_lazy('account:dashboard'))
-
