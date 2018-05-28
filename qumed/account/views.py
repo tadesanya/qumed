@@ -15,6 +15,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CustomUserCreationForm, LinkPracticeForm
 from .tokens import account_activation_token
 from referral.models import Practice
+from referral.forms import PracticeForm
 
 
 class SignUpView(generic.CreateView):
@@ -79,7 +80,8 @@ class LinkPracticeView(LoginRequiredMixin, View):
     template_name = 'account/link-practice.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        practice_form = PracticeForm()
+        return render(request, self.template_name, {'practice_form': practice_form})
 
     def post(self, request):
         form = LinkPracticeForm(request.POST)
