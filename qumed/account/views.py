@@ -29,7 +29,7 @@ class SignUpView(generic.CreateView):
         self.object.is_active = False
         self.object.save()
         current_site = get_current_site(self.request)
-        mail_subject = 'Activate your account.'
+        mail_subject = 'Activate your account on {}'.format(current_site.name)
         message = render_to_string('registration/activation_email.txt',
                                    {'user': self.object,
                                     'domain': current_site.domain,
