@@ -4,12 +4,27 @@
   <span class="navbar-toggler-icon"></span>
 </button>
 <div class="collapse navbar-collapse" id="navbarResponsive">
-  <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+  <!-- side bar -->
+  <ul class="navbar-nav navbar-sidenav" id="sideBarAccordion">
     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
       <a class="nav-link" href="#">
         <i class="fa fa-fw fa-dashboard"></i>
         <span class="nav-link-text">Dashboard</span>
       </a>
+    </li>
+    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Patients">
+      <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapsePatients" data-parent="#sideBarAccordion">
+        <i class="fa fa-fw fa-heartbeat"></i>
+        <span class="nav-link-text">Patients</span>
+      </a>
+      <ul class="sidenav-second-level collapse" id="collapsePatients">
+        <li>
+          <a href="#">View</a>
+        </li>
+        <li>
+          <a href="#">Create</a>
+        </li>
+      </ul>
     </li>
   </ul>
   <ul class="navbar-nav sidenav-toggler">
@@ -19,6 +34,7 @@
       </a>
     </li>
   </ul>
+  <!-- top bar -->
   <ul class="navbar-nav ml-auto">
     {% if user.is_authenticated %}
       <li class="nav-item">
