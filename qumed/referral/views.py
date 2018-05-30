@@ -44,3 +44,9 @@ class ListPatientsView(ListView):
 class CreatePatientView(CreateView):
     model = Patient
     template_name = 'referral/create_patient.html'
+    success_url = reverse_lazy('referral:view_patients')
+
+    def form_valid(self, form):
+        message = 'New patient created.'
+        messages.success(self.request, message)
+        return super().form_valid(form)

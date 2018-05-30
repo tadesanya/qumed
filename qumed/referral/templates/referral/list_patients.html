@@ -8,6 +8,7 @@
 {% endblock breadcrumb %}
 
 {% block content %}
+{% if patients %}
   <table class="table table-hover">
     <thead>
       <tr>
@@ -32,6 +33,8 @@
       {% endfor %}
     </tbody>
   </table>
-
   {% include "paginate.html" %}
+{% else %}
+  <p class="text-secondary">No patients registered to your practice yet.</p>
+{% endif %}
 {% endblock content %}
