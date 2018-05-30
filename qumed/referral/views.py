@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic import View
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 
 from .forms import PracticeForm
 from .models import Patient
@@ -32,10 +32,15 @@ class CreatePracticeView(View):
 class ListPatientsView(ListView):
     model = Patient
     context_object_name = 'patients'
-    template_name = ''
+    template_name = 'referral/list_patients.html'
     paginate_by = PAGINATE_30
 
     def get_queryset(self):
         practice = self.request.user.practice
         queryset = Patient.objects.filter(current_practice=practice)
         return queryset
+
+
+class CreatePatientView(CreateView):
+    model = Patient
+    template_name = 'referral/create_patient.html'

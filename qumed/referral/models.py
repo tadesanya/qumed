@@ -9,10 +9,10 @@ from qumed.constants import char_length_16, char_length_32, char_length_128, APP
 
 class Practice(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=char_length_32, unique=True)
-    address = models.CharField(max_length=char_length_128)
-    email = models.EmailField()
-    telephone = PhoneNumberField()
+    name = models.CharField('Name', max_length=char_length_32, unique=True)
+    address = models.CharField('Address', max_length=char_length_128)
+    email = models.EmailField('Email')
+    telephone = PhoneNumberField('Telephone')
     created_by = models.ForeignKey(get_user_model(),
                                    on_delete=models.CASCADE,
                                    related_name='creator',
@@ -20,11 +20,11 @@ class Practice(models.Model):
 
 
 class Patient(models.Model):
-    mrn = models.IntegerField(unique=True)
-    name = models.CharField(max_length=char_length_32, unique=True)
-    address = models.CharField(max_length=char_length_128)
-    email = models.EmailField()
-    telephone = PhoneNumberField()
+    mrn = models.IntegerField('Medical Record Number', unique=True)
+    name = models.CharField('Name', max_length=char_length_32, unique=True)
+    address = models.CharField('Address', max_length=char_length_128)
+    email = models.EmailField('Email')
+    telephone = PhoneNumberField('Telephone')
 
     creator_practice = models.ForeignKey(Practice,
                                          on_delete=models.CASCADE,
