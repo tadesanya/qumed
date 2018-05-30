@@ -47,13 +47,14 @@ class CreatePatientView(CreateView):
     template_name = 'referral/create_patient.html'
     success_url = reverse_lazy('referral:view_patients')
 
-    def get_success_url(self):
+    def form_valid(self, form):
         # Set creator and current practice on the patient object created
         practice = self.request.user.practice
+        self.object = form.save(commit=False)
         self.object.creator_practice = practice
         self.object.current_practice = practice
         self.object.save()
 
         message = 'New patient created.'
         messages.success(self.request, message)
-        return super().get_success_url()
+        return HttpResponseRedirect(self.get_success_url())
