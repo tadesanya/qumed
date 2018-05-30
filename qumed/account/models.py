@@ -2,13 +2,13 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 
-from qumed.constants import char_length_32
+from qumed.constants import CHAR_LENGTH_32
 
 
 class User(AbstractUser):
     email = models.EmailField(unique=True, null=False, blank=False)
-    first_name = models.CharField(max_length=char_length_32, null=False, blank=False)
-    last_name = models.CharField(max_length=char_length_32, null=False, blank=False)
+    first_name = models.CharField(max_length=CHAR_LENGTH_32, null=False, blank=False)
+    last_name = models.CharField(max_length=CHAR_LENGTH_32, null=False, blank=False)
     telephone = PhoneNumberField(null=True, blank=True)
     practice = models.ForeignKey('referral.Practice',
                                  on_delete=models.SET_NULL,
