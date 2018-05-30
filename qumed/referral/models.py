@@ -1,16 +1,19 @@
 import uuid
 
 from django.db import models
+from django.contrib.auth import get_user_model
 from phonenumber_field.modelfields import PhoneNumberField
 
 from qumed.constants import char_length_16, char_length_32, char_length_128, APPOINTMENT_STATUS
 
 
 class Practice(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=char_length_32, unique=True)
     address = models.CharField(max_length=char_length_128)
     email = models.EmailField()
     telephone = PhoneNumberField()
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='creator')
 
 
 class Patient(models.Model):

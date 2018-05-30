@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'phonenumber_field',
@@ -151,6 +152,7 @@ AUTH_USER_MODEL = 'account.User'
 # Authentication
 LOGIN_REDIRECT_URL = 'account:dashboard'
 LOGOUT_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
 
 # Email
 EMAIL_HOST = env('EMAIL_HOST')
@@ -167,3 +169,6 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
 }
+
+# Sites
+SITE_ID = 1
