@@ -2,8 +2,11 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic import View
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.views.generic import ListView
 
 from .forms import PracticeForm
+from .models import Patient
+from qumed.constants import PAGINATE_30
 
 
 class CreatePracticeView(View):
@@ -22,5 +25,17 @@ class CreatePracticeView(View):
             return HttpResponseRedirect(reverse_lazy('account:dashboard'))
         else:
             message = form.errors
-            messages.error(request, form)
+            messages.error(request, message)
             return HttpResponseRedirect(reverse_lazy('account:link_practice'))
+
+
+class ListPatientsView(ListView):
+    model = Patient
+    context_object_name = 'patients'
+    template_name = ''
+    paginate_by = PAGINATE_30
+
+    def get_queryset(self):
+        practice = self.request.user.practice
+        queryset = Patient.objects.filter(current_practice=practice)
+        return queryset

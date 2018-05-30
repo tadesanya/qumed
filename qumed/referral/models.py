@@ -13,7 +13,10 @@ class Practice(models.Model):
     address = models.CharField(max_length=char_length_128)
     email = models.EmailField()
     telephone = PhoneNumberField()
-    created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='creator')
+    created_by = models.ForeignKey(get_user_model(),
+                                   on_delete=models.CASCADE,
+                                   related_name='creator',
+                                   editable=False)
 
 
 class Patient(models.Model):
@@ -22,6 +25,14 @@ class Patient(models.Model):
     address = models.CharField(max_length=char_length_128)
     email = models.EmailField()
     telephone = PhoneNumberField()
+
+    creator_practice = models.ForeignKey(Practice,
+                                         on_delete=models.CASCADE,
+                                         related_name='created_patients',
+                                         editable=False)
+    current_practice = models.ForeignKey(Practice,
+                                         on_delete=models.CASCADE,
+                                         related_name='current_patients')
 
 
 class Referral(models.Model):

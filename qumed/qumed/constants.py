@@ -8,3 +8,6 @@ APPOINTMENT_STATUS = (
     ('complete', 'COMPLETE'),
     ('lmts', 'LMTS')
 )
+
+# pagination
+PAGINATE_30 = 30

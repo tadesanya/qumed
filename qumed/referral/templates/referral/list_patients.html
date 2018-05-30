@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}View Patients{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item">Patients</li> 
+  <li class="breadcrumb-item active">View</li> 
+{% endblock breadcrumb %}
+
+{% block content %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">MRN</th>
+        <th scope="col">Name</th>
+        <th scope="col">Address</th>
+        <th scope="col">Email</th>
+        <th scope="col">Telephone</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for patient in patients %}
+        <tr>
+          <td>{{patient.id}}</td>
+          <td>{{patient.mrn}}</td>
+          <td>{{patient.name}}</td>
+          <td>{{patient.address}}</td>
+          <td>{{patient.email}}</td>
+          <td>{{patient.telephone}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% include "paginate.html" %}
+{% endblock content %}
