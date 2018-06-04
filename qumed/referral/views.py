@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.views.generic import View
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 
 from .forms import PracticeForm
 from .models import Patient
@@ -29,7 +29,7 @@ class CreatePracticeView(View):
             return HttpResponseRedirect(reverse_lazy('account:link_practice'))
 
 
-class ListPatientsView(ListView):
+class PatientsListView(ListView):
     model = Patient
     context_object_name = 'patients'
     template_name = 'referral/list_patients.html'
@@ -41,7 +41,7 @@ class ListPatientsView(ListView):
         return queryset
 
 
-class CreatePatientView(CreateView):
+class PatientCreateView(CreateView):
     model = Patient
     fields = ['mrn', 'name', 'address', 'email', 'telephone']
     template_name = 'referral/create_patient.html'
@@ -58,3 +58,9 @@ class CreatePatientView(CreateView):
         message = 'New patient created.'
         messages.success(self.request, message)
         return HttpResponseRedirect(self.get_success_url())
+
+
+class PatientDetailView(DetailView):
+    model = Patient
+    context_object_name = 'patient'
+    template_name = 'referral/patient_detail.html'

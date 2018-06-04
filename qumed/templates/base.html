@@ -29,10 +29,10 @@
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <a href="#">Dashboard</a>
+            <a href="{% url 'account:dashboard' %}">dashboard</a>
           </li>
           {% block breadcrumb %}
-          <li class="breadcrumb-item active">My Dashboard</li>  
+          <li class="breadcrumb-item active">overview</li>  
           {% endblock breadcrumb %}
         </ol>
 

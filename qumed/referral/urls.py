@@ -7,7 +7,8 @@ app_name = 'referral'
 
 
 urlpatterns = [
-    path('create_practice', views.CreatePracticeView.as_view(), name='create_practice'),
-    path('view_patients', views.ListPatientsView.as_view(), name='view_patients'),
-    path('create_patient', views.CreatePatientView.as_view(), name='create_patient'),
+    path('practice/create/', views.CreatePracticeView.as_view(), name='create_practice'),
+    path('patients/view/', views.PatientsListView.as_view(), name='view_patients'),
+    path('patient/create/', views.PatientCreateView.as_view(), name='create_patient'),
+    path('patient/<int:pk>/', views.PatientDetailView.as_view(), name='patient_detail')
 ]

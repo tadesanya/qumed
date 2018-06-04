@@ -3,8 +3,8 @@
 {% block title %}Create Patient{% endblock %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item">Patients</li> 
-  <li class="breadcrumb-item active">Create</li> 
+  <li class="breadcrumb-item"><a href="{% url 'referral:view_patients' %}">patients</a></li> 
+  <li class="breadcrumb-item active">create</li> 
 {% endblock breadcrumb %}
 
 {% block content %}

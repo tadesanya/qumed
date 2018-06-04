@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Patient Detail{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'referral:view_patients' %}">patients</a></li> 
+  <li class="breadcrumb-item active">details</li> 
+{% endblock breadcrumb %}
+
+{% block content %}
+<div class="row mb-1">
+  <div class="col-md-3"><p><strong>ID: </strong>{{patient.id}}</p></div>
+  <div class="col-md-3"><p><strong>Name: </strong>{{patient.name}}</p></div>
+  <div class="col-md-6"><p><strong>MRN: </strong>{{patient.mrn}}</p></div>
+</div>
+<div class="row mb-3">
+  <div class="col-md-3"><p><strong>Telephone: </strong>{{patient.telephone}}</p></div>
+  <div class="col-md-3"><p><strong>Email: </strong>{{patient.email}}</p></div>
+  <div class="col-md-6"><p><strong>Address: </strong>{{patient.address}}</p></div>
+</div>
+{% endblock content %}
