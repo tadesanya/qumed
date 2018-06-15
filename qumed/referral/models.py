@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from phonenumber_field.modelfields import PhoneNumberField
 
-from qumed.constants import CHAR_LENGTH_16, CHAR_LENGTH_32, CHAR_LENGTH_128, APPOINTMENT_STATUS
+from qumed.constants import CHAR_LENGTH_16, CHAR_LENGTH_32, CHAR_LENGTH_128, APPOINTMENT_STATUS, REFERRAL_STATUS
 
 
 class Practice(models.Model):
@@ -17,6 +17,9 @@ class Practice(models.Model):
                                    on_delete=models.CASCADE,
                                    related_name='creator',
                                    editable=False)
+
+    def __str__(self):
+        return self.name
 
 
 class Patient(models.Model):
@@ -34,14 +37,23 @@ class Patient(models.Model):
                                          on_delete=models.CASCADE,
                                          related_name='current_patients')
 
+    def __str__(self):
+        return "{} ({})".format(self.name, self.mrn)
+
 
 class Referral(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    status = models.CharField(max_length=CHAR_LENGTH_16, choices=APPOINTMENT_STATUS)
     notes = models.TextField()
-
     date_referred = models.DateField(auto_now_add=True)
+    reason_for_referral = models.CharField(max_length=CHAR_LENGTH_128)
+    appointment_status = models.CharField(max_length=CHAR_LENGTH_16,
+                                          choices=APPOINTMENT_STATUS,
+                                          default='lmts')
+    referral_status = models.CharField(max_length=CHAR_LENGTH_16,
+                                       choices=REFERRAL_STATUS,
+                                       default='pending')
+
     referred_by = models.ForeignKey(Practice,
                                     on_delete=models.CASCADE,
                                     related_name='outgoing_referrals')
@@ -50,9 +62,11 @@ class Referral(models.Model):
                                     blank=True,
                                     null=True,
                                     related_name='incoming_referrals')
-    reason_for_referral = models.CharField(max_length=CHAR_LENGTH_128)
 
     first_attempt = models.DateTimeField(null=True, blank=True)
     second_attempt = models.DateTimeField(null=True, blank=True)
     third_attempt = models.DateTimeField(null=True, blank=True)
     appointment_date = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return self.id

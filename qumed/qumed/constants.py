@@ -11,3 +11,9 @@ APPOINTMENT_STATUS = (
 
 # pagination
 PAGINATE_30 = 30
+
+REFERRAL_STATUS = (
+    ('pending', 'PENDING'),
+    ('accepted', 'ACCEPTED'),
+    ('rejected', 'REJECTED'),
+)

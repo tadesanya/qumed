@@ -20,7 +20,7 @@
 </div>
 <div class="row mb-3">
   <div class="col-md-3">
-    <a href="#" class="btn btn-success">Refer this patient <i class="fa fa-paper-plane"></i></a>
+    <a href="{% url 'referral:create_referral' pk=patient.id %}" class="btn btn-success btn-block">Refer this patient <i class="fa fa-paper-plane"></i></a>
   </div>
 </div>
 {% endblock content %}
