@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}{{viewset|title}} Referrals{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'referral:view_patients' %}">referrals</a></li> 
+  <li class="breadcrumb-item active">{{viewset}}</li> 
+{% endblock breadcrumb %}
+
+{% block content %}
+{% if referrals %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Patient</th>
+        <th scope="col">Date Referred</th>
+        <th scope="col">Reason for Referral</th>
+        <th scope="col">Notes</th>
+        <th scope="col">Referred by</th>
+        <th scope="col">Accept</th>
+        <th scope="col">Reject</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for referral in referrals %}
+        <tr>
+          <td>{{referral.id}}</td>
+          <td>{{referral.patient.name}} ({{referral.patient.mrn}})</td>
+          <td>{{referral.date_referred}}</td>
+          <td>{{referral.reason_for_referral}}</td>
+          <td>{{referral.notes}}</td>
+          <td>{{referral.referred_by.name|title}}</td>
+          <td><i class="fa fa-check" aria-hidden="true"></i></td>
+          <td><i class="fa fa-times" aria-hidden="true"></i></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% include "paginate.html" %}
+{% else %}
+  <p class="text-secondary">No referrals at the moment.</p>
+{% endif %}
+{% endblock content %}

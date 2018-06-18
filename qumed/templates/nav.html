@@ -26,6 +26,26 @@
         </li>
       </ul>
     </li>
+    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Referrals">
+      <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseReferrals" data-parent="#sideBarAccordion">
+        <i class="fa fa-fw fa-users"></i>
+        <span class="nav-link-text">Referrals</span>
+      </a>
+      <ul class="sidenav-second-level collapse" id="collapseReferrals">
+        <li>
+          <a href="{% url 'referral:list_referrals' viewset=accepted %}">Accepted</a>
+        </li>
+        <li>
+          <a href="{% url 'referral:list_referrals' viewset=rejected %}">Rejected</a>
+        </li>
+        <li>
+          <a href="{% url 'referral:list_referrals' viewset=pending %}">Incoming</a>
+        </li>
+        <li>
+          <a href="{% url 'referral:list_referrals' viewset='outgoing' %}">Outgoing</a>
+        </li>
+      </ul>
+    </li>
   </ul>
   <ul class="navbar-nav sidenav-toggler">
     <li class="nav-item">

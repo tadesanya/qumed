@@ -47,9 +47,6 @@ class Referral(models.Model):
     notes = models.TextField()
     date_referred = models.DateField(auto_now_add=True)
     reason_for_referral = models.CharField(max_length=CHAR_LENGTH_128)
-    appointment_status = models.CharField(max_length=CHAR_LENGTH_16,
-                                          choices=APPOINTMENT_STATUS,
-                                          default='lmts')
     referral_status = models.CharField(max_length=CHAR_LENGTH_16,
                                        choices=REFERRAL_STATUS,
                                        default='pending')
@@ -63,6 +60,9 @@ class Referral(models.Model):
                                     null=True,
                                     related_name='incoming_referrals')
 
+    appointment_status = models.CharField(max_length=CHAR_LENGTH_16,
+                                          choices=APPOINTMENT_STATUS,
+                                          default='lmts')
     first_attempt = models.DateTimeField(null=True, blank=True)
     second_attempt = models.DateTimeField(null=True, blank=True)
     third_attempt = models.DateTimeField(null=True, blank=True)

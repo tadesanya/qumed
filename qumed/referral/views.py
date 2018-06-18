@@ -10,7 +10,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Q
 
 from .forms import PracticeForm, ReferralForm
-from .models import Patient, Practice
+from .models import Patient, Practice, Referral
 from qumed.constants import PAGINATE_30
 
 
@@ -105,3 +105,21 @@ class ReferralCreateView(LoginRequiredMixin, View):
         else:
             messages.error(request, form.errors)
             return HttpResponseRedirect(reverse_lazy('referral:create_referral'))
+
+
+class ReferralListView(LoginRequiredMixin, ListView):
+    model = Referral
+    context_object_name = 'referrals'
+    template_name = 'referral/list_referrals.html'
+    paginate_by = PAGINATE_30
+
+    def get_queryset(self):
+        practice = self.request.user.practice
+        viewset = self.kwargs['viewset']
+        queryset = Referral.objects.filter(referred_to=practice, referral_status=viewset)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['viewset'] = self.kwargs['viewset']
+        return context
