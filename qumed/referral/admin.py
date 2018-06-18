@@ -11,8 +11,8 @@ class PatientAdmin(admin.ModelAdmin):
 
 
 class ReferralAdmin(admin.ModelAdmin):
-    list_display = ('id', 'patient', 'notes', 'date_referred', 'reason_for_referral', 'appointment_status',
-                    'referral_status', 'referred_by', 'referred_to', 'first_attempt', 'second_attempt', 'third_attempt',
+    list_display = ('id', 'patient', 'date_referred', 'reason_for_referral', 'notes', 'referral_status', 'referred_by',
+                    'referred_to', 'appointment_status', 'first_attempt', 'second_attempt', 'third_attempt',
                     'appointment_date')
 
 

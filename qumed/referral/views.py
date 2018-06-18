@@ -4,6 +4,10 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import ListView, CreateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.db.models import Q
 
 from .forms import PracticeForm, ReferralForm
 from .models import Patient, Practice
@@ -73,18 +77,30 @@ class ReferralCreateView(LoginRequiredMixin, View):
     def get(self, request, **kwargs):
         referral_form = ReferralForm()
         patient = get_object_or_404(Patient, id=kwargs['pk'])
-        practices = get_list_or_404(Practice)
+        user_practice_id = request.user.practice.id
+        practices = get_list_or_404(Practice, ~Q(id=user_practice_id))
         return render(request, self.template_name, {'patient': patient,
                                                     'referral_form': referral_form,
                                                     'practices': practices})
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         form = ReferralForm(request.POST)
         if form.is_valid():
             referral = form.save()
-            message = "Patient has been referred to {}, you will be notified when they accept the referral".format(
-                referral.referred_to.name)
+
+            # Send referral notification email
+            current_site = get_current_site(self.request)
+            subject = 'Patient Referral from {}'.format(referral.referred_by.name)
+            email_body = render_to_string('referral/referral_notification_email.txt', {'domain': current_site,
+                                                                                       'patient': referral.patient})
+            recipients = [referral.referred_to.email]
+            email = EmailMessage(subject=subject, body=email_body, to=recipients)
+            email.send()
+
+            message = "{} has been referred to {}, you will be notified when they accept the referral".format(
+                referral.patient.name, referral.referred_to.name)
             messages.success(request, message)
+
             return HttpResponseRedirect(reverse_lazy('account:dashboard'))
         else:
             messages.error(request, form.errors)

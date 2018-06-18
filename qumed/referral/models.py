@@ -69,4 +69,4 @@ class Referral(models.Model):
     appointment_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return self.id
+        return str(self.id)
