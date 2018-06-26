@@ -21,6 +21,9 @@ class Practice(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ["name"]
+
 
 class Patient(models.Model):
     mrn = models.IntegerField('Medical Record Number', unique=True)
@@ -39,6 +42,9 @@ class Patient(models.Model):
 
     def __str__(self):
         return "{} ({})".format(self.name, self.mrn)
+
+    class Meta:
+        ordering = ["name"]
 
 
 class Referral(models.Model):
@@ -70,3 +76,6 @@ class Referral(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+    class Meta:
+        ordering = ["-date_referred"]

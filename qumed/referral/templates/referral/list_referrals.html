@@ -18,8 +18,10 @@
         <th scope="col">Reason for Referral</th>
         <th scope="col">Notes</th>
         <th scope="col">Referred by</th>
+        {% if viewset == 'pending' %}
         <th scope="col">Accept</th>
-        <th scope="col">Reject</th>
+        <th scope="col">Reject</th>  
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -31,8 +33,24 @@
           <td>{{referral.reason_for_referral}}</td>
           <td>{{referral.notes}}</td>
           <td>{{referral.referred_by.name|title}}</td>
-          <td><i class="fa fa-check" aria-hidden="true"></i></td>
-          <td><i class="fa fa-times" aria-hidden="true"></i></td>
+          {% if viewset == 'pending' %}
+          <td>
+            <form method="post" action="{% url 'referral:decide_on_referral' %}">
+              {% csrf_token %}
+              <input type="hidden" name="referral_id" value="{{referral.id}}">
+              <input type="hidden" name="referral_status" value="accepted">
+              <input class="btn btn-success" type="submit" value="Accept">
+            </form> 
+          </td>
+          <td>
+            <form method="post" action="{% url 'referral:decide_on_referral' %}">
+              {% csrf_token %}
+              <input type="hidden" name="referral_id" value="{{referral.id}}">
+              <input type="hidden" name="referral_status" value="rejected">
+              <input class="btn btn-danger" type="submit" value="Reject">
+            </form>
+          </td>
+          {% endif %}
         </tr>
       {% endfor %}
     </tbody>

@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Q
 
-from .forms import PracticeForm, ReferralForm
+from .forms import PracticeForm, ReferralForm, AcceptRejectForm
 from .models import Patient, Practice, Referral
 from qumed.constants import PAGINATE_30
 
@@ -123,3 +123,27 @@ class ReferralListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['viewset'] = self.kwargs['viewset']
         return context
+
+
+class AcceptRejectReferralView(LoginRequiredMixin, View):
+
+    def post(self, request):
+        form = AcceptRejectForm(request.POST)
+        if form.is_valid():
+            referral_id = form.cleaned_data['referral_id']
+            referral_status = form.cleaned_data['referral_status']
+            if referral_status != 'pending':
+                referral = get_object_or_404(Referral, id=referral_id)
+                referral.referral_status = referral_status
+                referral.save()
+                message = 'You have {} the referral.'.format(referral_status)
+                messages.info(request, message)
+
+                return HttpResponseRedirect(reverse_lazy('referral:list_referrals', kwargs={'viewset': 'pending'}))
+            else:
+                message = 'Invalid referral response given'
+                messages.error(request, message)
+                return HttpResponseRedirect(reverse_lazy('referral:list_referrals', kwargs={'viewset': 'pending'}))
+        else:
+            messages.error(request, form.errors)
+            return HttpResponseRedirect(reverse_lazy('referral:list_referrals', kwargs={'viewset': 'pending'}))
