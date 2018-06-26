@@ -116,7 +116,10 @@ class ReferralListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         practice = self.request.user.practice
         viewset = self.kwargs['viewset']
-        queryset = Referral.objects.filter(referred_to=practice, referral_status=viewset)
+        if viewset == 'outgoing':
+            queryset = Referral.objects.filter(referred_by=practice)
+        else:
+            queryset = Referral.objects.filter(referred_to=practice, referral_status=viewset)
         return queryset
 
     def get_context_data(self, **kwargs):

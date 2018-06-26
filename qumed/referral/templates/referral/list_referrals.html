@@ -22,6 +22,9 @@
         <th scope="col">Accept</th>
         <th scope="col">Reject</th>  
         {% endif %}
+        {% if viewset == 'outgoing' %}
+        <th scope="col">Status</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -50,6 +53,9 @@
               <input class="btn btn-danger" type="submit" value="Reject">
             </form>
           </td>
+          {% endif %}
+          {% if viewset == 'outgoing' %}
+          <td>{{referral.referral_status}}</td>
           {% endif %}
         </tr>
       {% endfor %}
