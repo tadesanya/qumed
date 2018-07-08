@@ -79,3 +79,11 @@ class Referral(models.Model):
 
     class Meta:
         ordering = ["-date_referred"]
+
+
+class TempReferral(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    notes = models.TextField()
+    reason_for_referral = models.CharField(max_length=CHAR_LENGTH_128)
+    referred_by = models.ForeignKey(Practice, on_delete=models.CASCADE)
+    referred_to_email = models.EmailField('Email')
