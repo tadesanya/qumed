@@ -1,0 +1,12 @@
+{% load i18n %}
+{% autoescape off %}
+Hello,
+
+A patient {{ temp_referral.patient.name|title }}, has been referred to your practice from {{ temp_referral.referred_by.name|title }} for the following reason:
+
+{{ temp_referral.reason_for_referral }}.
+
+Please click on the link below to sign-up on {{ domain.name }} to view more details and accept this referral.
+
+http://{{ domain }}{% url 'referral:onboard_1' temp_referral_id=encoded_id %}
+{% endautoescape %}

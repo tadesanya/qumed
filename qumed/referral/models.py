@@ -50,10 +50,11 @@ class Patient(models.Model):
 class Referral(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    notes = models.TextField()
+    notes = models.TextField('Notes')
     date_referred = models.DateField(auto_now_add=True)
-    reason_for_referral = models.CharField(max_length=CHAR_LENGTH_128)
-    referral_status = models.CharField(max_length=CHAR_LENGTH_16,
+    reason_for_referral = models.CharField('Reason for referral', max_length=CHAR_LENGTH_128)
+    referral_status = models.CharField('Referral Status',
+                                       max_length=CHAR_LENGTH_16,
                                        choices=REFERRAL_STATUS,
                                        default='pending')
 
@@ -66,13 +67,14 @@ class Referral(models.Model):
                                     null=True,
                                     related_name='incoming_referrals')
 
-    appointment_status = models.CharField(max_length=CHAR_LENGTH_16,
+    appointment_status = models.CharField('Appointment Status',
+                                          max_length=CHAR_LENGTH_16,
                                           choices=APPOINTMENT_STATUS,
                                           default='lmts')
-    first_attempt = models.DateTimeField(null=True, blank=True)
-    second_attempt = models.DateTimeField(null=True, blank=True)
-    third_attempt = models.DateTimeField(null=True, blank=True)
-    appointment_date = models.DateTimeField(null=True, blank=True)
+    first_attempt = models.DateTimeField('First Attempt', null=True, blank=True)
+    second_attempt = models.DateTimeField('Second Attempt', null=True, blank=True)
+    third_attempt = models.DateTimeField('Third Attempt', null=True, blank=True)
+    appointment_date = models.DateTimeField('Appointment Date', null=True, blank=True)
 
     def __str__(self):
         return str(self.id)

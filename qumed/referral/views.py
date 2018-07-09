@@ -8,8 +8,10 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Q
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text
 
-from .forms import PracticeForm, ReferralForm, AcceptRejectForm
+from .forms import PracticeForm, ReferralForm, AcceptRejectForm, TempReferralForm
 from .models import Patient, Practice, Referral
 from qumed.constants import PAGINATE_30
 
@@ -104,7 +106,36 @@ class ReferralCreateView(LoginRequiredMixin, View):
             return HttpResponseRedirect(reverse_lazy('account:dashboard'))
         else:
             messages.error(request, form.errors)
-            return HttpResponseRedirect(reverse_lazy('referral:create_referral'))
+            return HttpResponseRedirect(reverse_lazy('referral:create_referral', kwargs={'pk': request.POST['patient']}))
+
+
+class ReferByEmailView(LoginRequiredMixin, View):
+
+    def post(self, request):
+        form = TempReferralForm(request.POST)
+        if form.is_valid():
+            temp_referral = form.save()
+
+            # Send email to receiving practice, with encoded TempReferral object id
+            practice_name = request.user.practice.name
+            current_site = get_current_site(self.request)
+            email_subject = 'Patient Referral From {}'.format(practice_name.title())
+            email_message = render_to_string('referral/patient_referral_email.txt',
+                                             {'domain': current_site.domain,
+                                              'encoded_id': force_text(urlsafe_base64_encode(force_bytes(temp_referral.id))),
+                                              'temp_referral': temp_referral,
+                                              })
+            recipients = [temp_referral.referred_to_email]
+            email = EmailMessage(subject=email_subject, body=email_message, to=recipients)
+            email.send()
+
+            message = 'An email has been sent to the practice, to view details of the referral on our platform.'
+            messages.success(request, message)
+
+            return HttpResponseRedirect(reverse_lazy('account:dashboard'))
+        else:
+            messages.error(request, form.errors)
+            return HttpResponseRedirect(reverse_lazy('referral:create_referral', kwargs={'pk': request.POST['patient']}))
 
 
 class ReferralListView(LoginRequiredMixin, ListView):
@@ -150,3 +181,7 @@ class AcceptRejectReferralView(LoginRequiredMixin, View):
         else:
             messages.error(request, form.errors)
             return HttpResponseRedirect(reverse_lazy('referral:list_referrals', kwargs={'viewset': 'pending'}))
+
+
+class OnboardingStage1(View):
+    pass

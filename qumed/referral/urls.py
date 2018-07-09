@@ -14,5 +14,8 @@ urlpatterns = [
 
     path('create/<int:pk>/', views.ReferralCreateView.as_view(), name='create_referral'),
     path('incoming/<str:viewset>/', views.ReferralListView.as_view(), name='list_referrals'),
-    path('decide/', views.AcceptRejectReferralView.as_view(), name='decide_on_referral')
+    path('decide/', views.AcceptRejectReferralView.as_view(), name='decide_on_referral'),
+    path('email/', views.ReferByEmailView.as_view(), name='email_referral'),
+
+    path('onboard/1/<temp_referral_id>', views.OnboardingStage1.as_view(), name='onboard_1')
 ]
