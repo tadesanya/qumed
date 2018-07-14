@@ -1,4 +1,5 @@
 import uuid
+from datetime import date
 
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -51,7 +52,7 @@ class Referral(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     notes = models.TextField('Notes')
-    date_referred = models.DateField(auto_now_add=True)
+    date_referred = models.DateField(default=date.today)
     reason_for_referral = models.CharField('Reason for referral', max_length=CHAR_LENGTH_128)
     referral_status = models.CharField('Referral Status',
                                        max_length=CHAR_LENGTH_16,
@@ -89,3 +90,4 @@ class TempReferral(models.Model):
     reason_for_referral = models.CharField(max_length=CHAR_LENGTH_128)
     referred_by = models.ForeignKey(Practice, on_delete=models.CASCADE)
     referred_to_email = models.EmailField('Email')
+    date_referred = models.DateField(auto_now_add=True)
