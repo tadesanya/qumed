@@ -10,10 +10,12 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Q
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
+from django.contrib.auth import login
 
 from .forms import PracticeForm, ReferralForm, AcceptRejectForm, TempReferralForm
-from .models import Patient, Practice, Referral
+from .models import Patient, Practice, Referral, TempReferral
 from qumed.constants import PAGINATE_30
+from account.forms import CustomUserCreationForm
 
 
 class CreatePracticeView(LoginRequiredMixin, View):
@@ -183,5 +185,61 @@ class AcceptRejectReferralView(LoginRequiredMixin, View):
             return HttpResponseRedirect(reverse_lazy('referral:list_referrals', kwargs={'viewset': 'pending'}))
 
 
-class OnboardingStage1(View):
-    pass
+class OnboardingStage1(CreateView):
+    template_name = 'referral/onboard_1.html'
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('referral:onboard_2')
+
+    def get(self, request, *args, **kwargs):
+        # Decode the temp_referral_id in the url to check if it exists and add to session
+        temp_referral_id = force_text(urlsafe_base64_decode(kwargs['temp_referral_id']))
+        get_object_or_404(TempReferral, id=temp_referral_id)
+        request.session['temp_referral_id'] = temp_referral_id
+
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        login(self.request, self.object)
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class OnboardingStage2(LoginRequiredMixin, CreateView):
+    template_name = 'referral/onboard_2.html'
+    form_class = PracticeForm
+    success_url = reverse_lazy('referral:onboard_3')
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.created_by = self.request.user
+        self.object.save()
+
+        # Link practice to the user
+        self.request.user.practice = self.object
+        self.request.user.save()
+
+        # Add the referral to the practise
+        try:
+            temp_referral_id = self.request.sessions['temp_referral_id']
+        except(TypeError, ValueError, KeyError):
+            message = 'Error: temp_referral_id does not exist in session.'
+            messages.error(self.request, message)
+            HttpResponseRedirect(reverse_lazy('referral:onboard_error'))
+
+        try:
+            temp_referral = TempReferral.objects.get(pk=temp_referral_id)
+        except TempReferral.DoesNotExist:
+            message = 'Error: temp_referral object with that id does not exist.'
+            messages.error(self.request, message)
+            HttpResponseRedirect(reverse_lazy('referral:onboard_error'))
+
+        referral = Referral.objects.create(patient=temp_referral.patient,
+                                           notes=temp_referral.notes,
+                                           date_referred=temp_referral.date_referred,
+                                           reason_for_referral=temp_referral.reason_for_referral,
+                                           referred_by=temp_referral.referred_by,
+                                           referred_to=self.object)
+        temp_referral.delete()
+
+
+        return HttpResponseRedirect(self.get_success_url())

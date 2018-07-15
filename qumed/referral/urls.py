@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import TemplateView
 
 from . import views
 
@@ -17,5 +18,12 @@ urlpatterns = [
     path('decide/', views.AcceptRejectReferralView.as_view(), name='decide_on_referral'),
     path('email/', views.ReferByEmailView.as_view(), name='email_referral'),
 
-    path('onboard/1/<temp_referral_id>', views.OnboardingStage1.as_view(), name='onboard_1')
+    path('onboard/1/<temp_referral_id>/', views.OnboardingStage1.as_view(), name='onboard_1'),
+    path('onboard/2/', views.OnboardingStage2.as_view(), name='onboard_2'),
+    path('onboard/3/',
+         TemplateView.as_view(template_name='referral/onboard_3'),
+         name='onboard_3'),
+    path('onboard/error/',
+         TemplateView.as_view(template_name='referral/onboard_error.html'),
+         name='onboard_error')
 ]

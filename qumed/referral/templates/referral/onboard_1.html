@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Onboard - Create User Account{% endblock %}
+
+{% block body %}
+  <div class="container"> 
+    <div class="card">
+      <div class="card-header">
+        <div class="progress card-text">
+          <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" style="width: 33%" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Welcome, now let's get you setup.</h5>
+        <h6 class="card-subtitle mb-2 text-muted">First create an account by filling the details below:</h6>
+        
+
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">Sign up</button>
+        </form>
+        
+      </div>
+      <div class="card-footer">
+        <p>If you already have an account,  <a class="d-block small mt-3" href="{% url 'login' %}">Login Page</a></p>
+      </div>
+    </div>
+  </div>
+{% endblock body %}
