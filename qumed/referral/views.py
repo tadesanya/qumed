@@ -200,7 +200,11 @@ class OnboardingStage1(CreateView):
 
     def form_valid(self, form):
         self.object = form.save()
+        # Get temp_referral_id from session, to set it in logged in session
+        temp_referral_id = self.request.session['temp_referral_id']
+
         login(self.request, self.object)
+        self.request.session['temp_referral_id'] = temp_referral_id
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -219,27 +223,29 @@ class OnboardingStage2(LoginRequiredMixin, CreateView):
         self.request.user.save()
 
         # Add the referral to the practise
+        temp_referral_id = None
+        temp_referral = None
+
         try:
-            temp_referral_id = self.request.sessions['temp_referral_id']
+            temp_referral_id = self.request.session['temp_referral_id']
         except(TypeError, ValueError, KeyError):
             message = 'Error: temp_referral_id does not exist in session.'
             messages.error(self.request, message)
-            HttpResponseRedirect(reverse_lazy('referral:onboard_error'))
+            return HttpResponseRedirect(reverse_lazy('referral:onboard_error'))
 
         try:
             temp_referral = TempReferral.objects.get(pk=temp_referral_id)
         except TempReferral.DoesNotExist:
             message = 'Error: temp_referral object with that id does not exist.'
             messages.error(self.request, message)
-            HttpResponseRedirect(reverse_lazy('referral:onboard_error'))
+            return HttpResponseRedirect(reverse_lazy('referral:onboard_error'))
 
-        referral = Referral.objects.create(patient=temp_referral.patient,
-                                           notes=temp_referral.notes,
-                                           date_referred=temp_referral.date_referred,
-                                           reason_for_referral=temp_referral.reason_for_referral,
-                                           referred_by=temp_referral.referred_by,
-                                           referred_to=self.object)
+        Referral.objects.create(patient=temp_referral.patient,
+                                notes=temp_referral.notes,
+                                date_referred=temp_referral.date_referred,
+                                reason_for_referral=temp_referral.reason_for_referral,
+                                referred_by=temp_referral.referred_by,
+                                referred_to=self.object)
         temp_referral.delete()
-
 
         return HttpResponseRedirect(self.get_success_url())

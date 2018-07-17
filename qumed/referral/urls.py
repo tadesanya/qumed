@@ -21,7 +21,7 @@ urlpatterns = [
     path('onboard/1/<temp_referral_id>/', views.OnboardingStage1.as_view(), name='onboard_1'),
     path('onboard/2/', views.OnboardingStage2.as_view(), name='onboard_2'),
     path('onboard/3/',
-         TemplateView.as_view(template_name='referral/onboard_3'),
+         TemplateView.as_view(template_name='referral/onboard_3.html'),
          name='onboard_3'),
     path('onboard/error/',
          TemplateView.as_view(template_name='referral/onboard_error.html'),

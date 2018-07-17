@@ -13,7 +13,7 @@
       <div class="card-body">
         <h5 class="card-title">All done!</h5>
         <h6 class="card-subtitle mb-2 text-muted">You are now fully setup.</h6>
-        <p>You can view pending referrals sent to your practise by clicking on the "Referral" link, or click <a href="{% url 'referral/list_referrals' {'viewset': 'pending'} %}"> here</a></p>
+        <p>You can view pending referrals sent to your practise by clicking on the "Referral" link in your user <a href="{% url 'account:dashboard' %}"> dashboard</a>, or click <a href="{% url 'referral:list_referrals' viewset=pending %}"> here</a></p>
       </div>
     </div>
   </div>
