@@ -13,14 +13,52 @@
   <div class="col-md-3"><p><strong>Name: </strong>{{patient.name}}</p></div>
   <div class="col-md-6"><p><strong>MRN: </strong>{{patient.mrn}}</p></div>
 </div>
+
 <div class="row mb-3">
   <div class="col-md-3"><p><strong>Telephone: </strong>{{patient.telephone}}</p></div>
   <div class="col-md-3"><p><strong>Email: </strong>{{patient.email}}</p></div>
   <div class="col-md-6"><p><strong>Address: </strong>{{patient.address}}</p></div>
 </div>
+
 <div class="row mb-3">
   <div class="col-md-3">
     <a href="{% url 'referral:create_referral' pk=patient.id %}" class="btn btn-success btn-block">Refer this patient <i class="fa fa-paper-plane"></i></a>
   </div>
 </div>
+
+{% if patient.referral_set.all %}
+<div class="row my-3">
+  <div class="col-md-12">
+    <h6>Referrals associated with this patient:</h6>
+    <table class="table table-hover table-sm">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#ID</th>
+          <th scope="col">Date Referred</th>
+          <th scope="col">Referral Status</th>
+          <th scope="col">Reason For Referral</th>
+          <th scope="col">Notes</th>
+          <th scope="col">Referred To</th>
+          <th scope="col">Appointment Status</th>
+          <th scope="col">Appointment Date</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for referral in patient.referral_set.all %}
+        <tr>
+          <th scope="row">{{referral.id}}</th>
+          <td>{{referral.date_referred}}</td>
+          <td>{{referral.referral_status}}</td>
+          <td>{{referral.reason_for_referral}}</td>
+          <td>{{referral.notes}}</td>
+          <td>{{referral.referred_to}}</td>
+          <td>{{referral.appointment_status}}</td>
+          <td>{{referral.appointment_date}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
 {% endblock content %}
