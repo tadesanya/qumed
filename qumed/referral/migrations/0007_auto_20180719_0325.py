@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.RunSQL(
             '''
             ALTER TABLE referral_referral ADD CONSTRAINT cannot_refer_to_self CHECK (
-                referred_by <> referred_to
+                referral_referral.referred_by_id <> referral_referral.referred_to_id
             );
             ''',
             '''
