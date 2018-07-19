@@ -26,7 +26,7 @@
   </div>
 </div>
 
-{% if patient.referral_set.all %}
+{% if patient.referral_set.all.exists %}
 <div class="row my-3">
   <div class="col-md-12">
     <h6>Referrals associated with this patient:</h6>
