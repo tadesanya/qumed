@@ -1,10 +1,19 @@
 from django.forms import modelform_factory
+from django import forms
 
-from .models import Practice, Patient, Referral
+from .models import Practice, Patient, Referral, TempReferral
+from qumed.constants import CHAR_LENGTH_16, REFERRAL_STATUS
 
 
+# model forms
 PracticeForm = modelform_factory(Practice, fields=('name', 'address', 'email', 'telephone'))
 PatientForm = modelform_factory(Patient, fields=('mrn', 'name', 'address', 'email', 'telephone'))
-ReferralForm = modelform_factory(Referral, fields=('patient', 'status', 'notes', 'referred_by',
-                                                   'referred_to', 'reason_for_referral', 'first_attempt',
-                                                   'second_attempt', 'third_attempt', 'appointment_date'))
+ReferralForm = modelform_factory(Referral, fields=('patient', 'notes', 'referred_by',
+                                                   'referred_to', 'reason_for_referral'))
+TempReferralForm = modelform_factory(TempReferral, exclude=())
+
+
+# non model forms
+class AcceptRejectForm(forms.Form):
+    referral_id = forms.UUIDField()
+    referral_status = forms.ChoiceField(choices=REFERRAL_STATUS, widget=forms.HiddenInput)

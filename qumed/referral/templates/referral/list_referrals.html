@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}{{viewset|title}} Referrals{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'referral:view_patients' %}">referrals</a></li> 
+  <li class="breadcrumb-item active">{{viewset}}</li> 
+{% endblock breadcrumb %}
+
+{% block content %}
+{% if referrals %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Patient</th>
+        <th scope="col">Date Referred</th>
+        <th scope="col">Reason for Referral</th>
+        <th scope="col">Notes</th>
+        <th scope="col">Referred by</th>
+        {% if viewset == 'pending' %}
+        <th scope="col">Accept</th>
+        <th scope="col">Reject</th>  
+        {% endif %}
+        {% if viewset == 'outgoing' %}
+        <th scope="col">Status</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for referral in referrals %}
+        <tr>
+          <td>{{referral.id}}</td>
+          <td>{{referral.patient.name}} ({{referral.patient.mrn}})</td>
+          <td>{{referral.date_referred}}</td>
+          <td>{{referral.reason_for_referral}}</td>
+          <td>{{referral.notes}}</td>
+          <td>{{referral.referred_by.name|title}}</td>
+          {% if viewset == 'pending' %}
+          <td>
+            <form method="post" action="{% url 'referral:decide_on_referral' %}">
+              {% csrf_token %}
+              <input type="hidden" name="referral_id" value="{{referral.id}}">
+              <input type="hidden" name="referral_status" value="accepted">
+              <input class="btn btn-success" type="submit" value="Accept">
+            </form> 
+          </td>
+          <td>
+            <form method="post" action="{% url 'referral:decide_on_referral' %}">
+              {% csrf_token %}
+              <input type="hidden" name="referral_id" value="{{referral.id}}">
+              <input type="hidden" name="referral_status" value="rejected">
+              <input class="btn btn-danger" type="submit" value="Reject">
+            </form>
+          </td>
+          {% endif %}
+          {% if viewset == 'outgoing' %}
+          <td>{{referral.referral_status}}</td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% include "paginate.html" %}
+{% else %}
+  <p class="text-secondary">No {{viewset}} referrals at the moment.</p>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}View Patients{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'referral:view_patients' %}">patients</a></li> 
+  <li class="breadcrumb-item active">all</li> 
+{% endblock breadcrumb %}
+
+{% block content %}
+{% if patients %}
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">MRN</th>
+        <th scope="col">Name</th>
+        <th scope="col">Address</th>
+        <th scope="col">Email</th>
+        <th scope="col">Telephone</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for patient in patients %}
+        <tr>
+          <td><a href="{% url 'referral:patient_detail' pk=patient.id %}">{{patient.id}}</a></td>
+          <td>{{patient.mrn}}</td>
+          <td><a href="{% url 'referral:patient_detail' pk=patient.id %}">{{patient.name}}</a></td>
+          <td>{{patient.address}}</td>
+          <td>{{patient.email}}</td>
+          <td>{{patient.telephone}}</td>
+          <td><a href="{% url 'referral:patient_detail' pk=patient.id %}"><i class="fa fa-address-card" aria-hidden="true"></i></a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% include "paginate.html" %}
+{% else %}
+  <p class="text-secondary">No patients registered to your practice yet.</p>
+{% endif %}
+{% endblock content %}

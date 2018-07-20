@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Create Referral{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="#">referrals</a></li> 
+  <li class="breadcrumb-item active">create</li> 
+{% endblock breadcrumb %}
+
+{% block content %}
+  <div class="row mb-3">
+    <div class="col-md-5">
+      <strong class="text-secondary">Referral for: {{patient.name|title}}</strong>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-5">
+      <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#directReferralModal">
+        Refer to practice already on this platform
+      </button>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-5">
+      <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#emailReferralModal">
+        Refer to practice not on this platform
+      </button>
+    </div>
+  </div>
+
+  <!-- directReferralModal modal -->
+  <div class="modal fade" id="directReferralModal" tabindex="-1" role="dialog" aria-labelledby="directReferralModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form action="" method="post">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="directReferralModalCenterTitle">Referral form for {{patient.name}} to practice already on this platform</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="reasonTextInput">Reason for referral</label>
+            <input type="text" class="form-control" name="reason_for_referral" maxlength="128" id="reasonTextInput">
+          </div>
+          <div class="form-group">
+            <label for="notesTextArea">Notes</label>
+            <textarea id="notesTextArea" class="form-control" rows="5" name="notes"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="practiceSelect">Referred to Practice</label>
+            <select name="referred_to" id="practiceSelect" class="form-control">
+              <option value="">select a practice</option>
+              {% for practice in practices %}
+              <option value="{{practice.id}}">{{practice.name}}</option>  
+              {% endfor %}
+            </select>
+          </div>
+          <input type="hidden" name="referred_by" value="{{request.user.practice.id}}">
+          <input type="hidden" name="patient" value="{{patient.id}}">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Send referral</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- emailReferralModal modal -->
+  <div class="modal fade" id="emailReferralModal" tabindex="-1" role="dialog" aria-labelledby="emailReferralModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form action="{% url 'referral:email_referral' %}" method="post">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="emailReferralModalCenterTitle">Referral form for {{patient.name}} to practice not on this platform</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="reasonTextInput">Reason for referral</label>
+            <input type="text" class="form-control" name="reason_for_referral" maxlength="128" id="reasonTextInput">
+          </div>
+          <div class="form-group">
+            <label for="notesTextArea">Notes</label>
+            <textarea id="notesTextArea" class="form-control" rows="5" name="notes"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="practiceSelect">Receiving Practice Email</label>
+            <input type="email" class="form-control" name="referred_to_email" id="referredToEmailInput">
+          </div>
+          <input type="hidden" name="referred_by" value="{{request.user.practice.id}}">
+          <input type="hidden" name="patient" value="{{patient.id}}">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Send referral</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

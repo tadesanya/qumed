@@ -1,0 +1,4 @@
+Hello,
+
+A patient {{patient.name}}, has been referred to your practice.
+Please login to your {{domain.name}} account to view more details.
