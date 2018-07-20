@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="card card-login mx-auto mt-5">
+      <div class="card-header">Homepage</div>
+      <div class="card-body">
+        {% if user.is_authenticated %}
+          Hi {{ user.username }}!
+          <p><a href="{% url 'logout' %}">logout</a></p>
+        {% else %}
+          <p>You are not logged in</p>
+          <a href="{% url 'login' %}">login</a> |
+          <a href="{% url 'account:signup' %}">signup</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>    
+{% endblock body %}
