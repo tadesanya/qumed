@@ -35,5 +35,5 @@ Run Migragrations `python qumed/manage.py migrate`
 Start server `python qumed/manage.py runserver`
 
 ### Structure
-The Repo has two main branches `master` and `dev`. 
-`dev` is where all branches checkout of and where all PR's are merged to. `dev` is the branch that is used on staging/test servers, while `master` is the branch used on production. 
+The Repo has a main branch `master`. 
+All other branches checkout from it.
