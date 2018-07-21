@@ -43,16 +43,16 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="reasonTextInput">Reason for referral</label>
-            <input type="text" class="form-control" name="reason_for_referral" maxlength="128" id="reasonTextInput">
+            <input type="text" class="form-control" name="reason_for_referral" maxlength="128" id="reasonTextInput" required>
           </div>
           <div class="form-group">
             <label for="notesTextArea">Notes</label>
-            <textarea id="notesTextArea" class="form-control" rows="5" name="notes"></textarea>
+            <textarea id="notesTextArea" class="form-control" rows="5" name="notes" required></textarea>
           </div>
           <div class="form-group">
             <label for="practiceSelect">Referred to Practice</label>
-            <select name="referred_to" id="practiceSelect" class="form-control">
-              <option value="">select a practice</option>
+            <select name="referred_to" id="practiceSelect" class="form-control" required>
+              <option>select a practice</option>
               {% for practice in practices %}
               <option value="{{practice.id}}">{{practice.name}}</option>  
               {% endfor %}

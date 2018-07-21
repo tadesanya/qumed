@@ -14,7 +14,7 @@ from django.contrib.auth import login
 
 from .forms import PracticeForm, ReferralForm, AcceptRejectForm, TempReferralForm
 from .models import Patient, Practice, Referral, TempReferral
-from qumed.constants import PAGINATE_30
+from qumed.constants import PAGINATE_30, REFERRAL_STATUS
 from account.forms import CustomUserCreationForm
 
 
@@ -46,7 +46,7 @@ class PatientsListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         practice = self.request.user.practice
-        queryset = Patient.objects.filter(current_practice=practice)
+        queryset = Patient.objects.filter(Q(current_practice=practice) | Q(creator_practice=practice))
         return queryset
 
 
@@ -168,13 +168,19 @@ class AcceptRejectReferralView(LoginRequiredMixin, View):
         if form.is_valid():
             referral_id = form.cleaned_data['referral_id']
             referral_status = form.cleaned_data['referral_status']
-            if referral_status != 'pending':
+            if referral_status != REFERRAL_STATUS[0][0]:
                 referral = get_object_or_404(Referral, id=referral_id)
                 referral.referral_status = referral_status
+
+                if referral_status == REFERRAL_STATUS[1][0]:
+                    patient = Patient.objects.get(id=referral.patient.id)
+                    patient.current_practice = referral.referred_to
+                    patient.save()
+
                 referral.save()
+
                 message = 'You have {} the referral.'.format(referral_status)
                 messages.info(request, message)
-
                 return HttpResponseRedirect(reverse_lazy('referral:list_referrals', kwargs={'viewset': 'pending'}))
             else:
                 message = 'Invalid referral response given'
