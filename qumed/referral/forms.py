@@ -1,8 +1,8 @@
 from django.forms import modelform_factory
 from django import forms
 
-from .models import Practice, Patient, Referral, TempReferral
-from qumed.constants import CHAR_LENGTH_16, REFERRAL_STATUS
+from .models import Practice, Patient, Referral, TempReferral, Appointment
+from qumed.constants import REFERRAL_STATUS
 
 
 # model forms
@@ -11,6 +11,8 @@ PatientForm = modelform_factory(Patient, fields=('mrn', 'name', 'address', 'emai
 ReferralForm = modelform_factory(Referral, fields=('patient', 'notes', 'referred_by',
                                                    'referred_to', 'reason_for_referral'))
 TempReferralForm = modelform_factory(TempReferral, exclude=())
+AppointmentForm = modelform_factory(Appointment, fields=('appointment_status', 'appointment_date', 'first_attempt',
+                                                         'second_attempt', 'third_attempt'))
 
 
 # non model forms

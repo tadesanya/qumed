@@ -14,7 +14,7 @@ urlpatterns = [
     path('patient/<int:pk>/', views.PatientDetailView.as_view(), name='patient_detail'),
 
     path('create/<int:pk>/', views.ReferralCreateView.as_view(), name='create_referral'),
-    path('incoming/<str:viewset>/', views.ReferralListView.as_view(), name='list_referrals'),
+    path('view/<str:viewset>/', views.ReferralListView.as_view(), name='list_referrals'),
     path('decide/', views.AcceptRejectReferralView.as_view(), name='decide_on_referral'),
     path('email/', views.ReferByEmailView.as_view(), name='email_referral'),
 

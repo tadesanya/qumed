@@ -92,12 +92,10 @@ class Appointment(models.Model):
     appointment_status = models.CharField('Appointment Status',
                                           max_length=CHAR_LENGTH_16,
                                           choices=APPOINTMENT_STATUS,
-                                          default='lmts')
+                                          default='unset')
 
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    practice = models.ForeignKey(Practice, on_delete=models.CASCADE)
-    physician_seen = models.BooleanField('Physician Seen')
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, editable=False)
+    practice = models.ForeignKey(Practice, on_delete=models.CASCADE, editable=False)
 
     def __str__(self):
         return '{} ({})'.format(self.id, self.appointment_date.strftime('%c'))
-

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Practice, Patient, Referral, TempReferral
+from .models import Practice, Patient, Referral, TempReferral, Appointment
 
 
 class PracticeAdmin(admin.ModelAdmin):
@@ -20,10 +20,11 @@ class TempReferralAdmin(admin.ModelAdmin):
 
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('appointment_status', 'first_attempt', 'second_attempt', 'third_attempt', 'appointment_date',
-                    'patient', 'practice', 'physician_seen')
+                    'patient', 'practice')
 
 
 admin.site.register(Practice, PracticeAdmin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(Referral, ReferralAdmin)
 admin.site.register(TempReferral, TempReferralAdmin)
+admin.site.register(Appointment, AppointmentAdmin)

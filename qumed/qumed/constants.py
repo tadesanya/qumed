@@ -4,9 +4,10 @@ CHAR_LENGTH_32 = 32
 CHAR_LENGTH_128 = 128
 
 APPOINTMENT_STATUS = (
+    ('unset', 'UNSET'),
+    ('lmts', 'LMTS'),
     ('scheduled', 'SCHEDULED'),
-    ('complete', 'COMPLETE'),
-    ('lmts', 'LMTS')
+    ('complete', 'COMPLETE')
 )
 
 # pagination

@@ -31,7 +31,7 @@
       {% for referral in referrals %}
         <tr>
           <td>{{referral.id}}</td>
-          <td>{{referral.patient.name}} ({{referral.patient.mrn}})</td>
+          <td><a href="{% url 'referral:patient_detail' pk=referral.patient.id %}">{{referral.patient.name}} ({{referral.patient.mrn}})</a></td>
           <td>{{referral.date_referred}}</td>
           <td>{{referral.reason_for_referral}}</td>
           <td>{{referral.notes}}</td>

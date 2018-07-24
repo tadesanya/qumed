@@ -8,57 +8,86 @@
 {% endblock breadcrumb %}
 
 {% block content %}
-<div class="row mb-1">
-  <div class="col-md-3"><p><strong>ID: </strong>{{patient.id}}</p></div>
-  <div class="col-md-3"><p><strong>Name: </strong>{{patient.name}}</p></div>
-  <div class="col-md-6"><p><strong>MRN: </strong>{{patient.mrn}}</p></div>
-</div>
-
 <div class="row mb-3">
-  <div class="col-md-3"><p><strong>Telephone: </strong>{{patient.telephone}}</p></div>
-  <div class="col-md-3"><p><strong>Email: </strong>{{patient.email}}</p></div>
-  <div class="col-md-6"><p><strong>Address: </strong>{{patient.address}}</p></div>
-</div>
-
-<div class="row mb-3">
+  <div class="col-md-1">
+    {% if patient.creator_practice == request.user.practice %}
+      <span class="badge badge-dark">In-house</span>
+    {% else %}
+      <span class="badge badge-success">Referred</span>
+    {% endif %}
+  </div>
   <div class="col-md-3">
-    <a href="{% url 'referral:create_referral' pk=patient.id %}" class="btn btn-success btn-block">Refer this patient <i class="fa fa-paper-plane"></i></a>
+    <strong class="text-secondary">{{patient.name|title}}</strong>
   </div>
 </div>
 
-{% if patient.referral_set.all.exists %}
-<div class="row my-3">
-  <div class="col-md-12">
-    <h6>Referrals associated with this patient:</h6>
-    <table class="table table-hover table-sm">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">#ID</th>
-          <th scope="col">Date Referred</th>
-          <th scope="col">Referral Status</th>
-          <th scope="col">Reason For Referral</th>
-          <th scope="col">Notes</th>
-          <th scope="col">Referred To</th>
-          <th scope="col">Appointment Status</th>
-          <th scope="col">Appointment Date</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for referral in patient.referral_set.all %}
-        <tr>
-          <th scope="row">{{referral.id}}</th>
-          <td>{{referral.date_referred}}</td>
-          <td>{{referral.referral_status}}</td>
-          <td>{{referral.reason_for_referral}}</td>
-          <td>{{referral.notes}}</td>
-          <td>{{referral.referred_to}}</td>
-          <td>{{referral.appointment_status}}</td>
-          <td>{{referral.appointment_date}}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-    </table>
+<!-- Tab section -->
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="pills-info-tab" data-toggle="pill" href="#pills-info" role="tab" aria-controls="pills-info" aria-selected="true">Info</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="pills-referral-tab" data-toggle="pill" href="#pills-referral" role="tab" aria-controls="pills-referral" aria-selected="false">Referral</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="pills-appointment-tab" data-toggle="pill" href="#pills-appointment" role="tab" aria-controls="pills-appointment" aria-selected="false">Appointment</a>
+  </li>
+  <li class="nav-item">
+    <a href="{% url 'referral:create_referral' pk=patient.id %}" class="nav-link">Refer this patient <i class="fa fa-paper-plane"></i></a>
+  </li>
+</ul>
+
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-info" role="tabpanel" aria-labelledby="pills-info-tab">
+    <div class="row mb-1">
+      <div class="col-md-3"><p><strong>ID: </strong>{{patient.id}}</p></div>
+      <div class="col-md-3"><p><strong>Name: </strong>{{patient.name}}</p></div>
+      <div class="col-md-6"><p><strong>MRN: </strong>{{patient.mrn}}</p></div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-3"><p><strong>Telephone: </strong>{{patient.telephone}}</p></div>
+      <div class="col-md-3"><p><strong>Email: </strong>{{patient.email}}</p></div>
+      <div class="col-md-6"><p><strong>Address: </strong>{{patient.address}}</p></div>
+    </div>
   </div>
+  <div class="tab-pane fade" id="pills-referral" role="tabpanel" aria-labelledby="pills-referral-tab">
+    {% if patient.referral_set.all.exists %}
+      <div class="row my-3">
+        <div class="col-md-12">
+          <h6>Referrals associated with this patient:</h6>
+          <table class="table table-hover table-sm">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">#ID</th>
+                <th scope="col">Date Referred</th>
+                <th scope="col">Referral Status</th>
+                <th scope="col">Reason For Referral</th>
+                <th scope="col">Notes</th>
+                <th scope="col">Referred To</th>
+                <th scope="col">Appointment Status</th>
+                <th scope="col">Appointment Date</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for referral in patient.referral_set.all %}
+              <tr>
+                <th scope="row">{{referral.id}}</th>
+                <td>{{referral.date_referred}}</td>
+                <td>{{referral.referral_status}}</td>
+                <td>{{referral.reason_for_referral}}</td>
+                <td>{{referral.notes}}</td>
+                <td>{{referral.referred_to}}</td>
+                <td>{{referral.appointment_status}}</td>
+                <td>{{referral.appointment_date}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          </table>
+        </div>
+      </div>
+    {% endif %}   
+  </div>
+  <div class="tab-pane fade" id="pills-appointment" role="tabpanel" aria-labelledby="pills-appointment-tab">...</div>
 </div>
-{% endif %}
 {% endblock content %}
