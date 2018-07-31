@@ -12,8 +12,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.contrib.auth import login
 
-from .forms import PracticeForm, ReferralForm, AcceptRejectForm, TempReferralForm
-from .models import Patient, Practice, Referral, TempReferral
+from .forms import PracticeForm, ReferralForm, AcceptRejectForm, TempReferralForm, AppointmentForm
+from .models import Patient, Practice, Referral, TempReferral, Appointment
 from qumed.constants import PAGINATE_30, REFERRAL_STATUS
 from account.forms import CustomUserCreationForm
 
@@ -73,6 +73,14 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
     model = Patient
     context_object_name = 'patient'
     template_name = 'referral/patient_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        appointments = Appointment.objects.filter(practice=self.request.user.practice, patient=self.object)
+        context['appointments'] = appointments
+        context['appointment_form'] = AppointmentForm()
+        kwargs.update(context)
+        return super().get_context_data(**kwargs)
 
 
 class ReferralCreateView(LoginRequiredMixin, View):

@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'referral',
     'account',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

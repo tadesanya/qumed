@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
 
 {% block title %}Patient Detail{% endblock %}
 
@@ -22,7 +23,7 @@
 </div>
 
 <!-- Tab section -->
-<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+<ul class="nav nav-pills nav-justified mb-3" id="pills-tab" role="tablist">
   <li class="nav-item">
     <a class="nav-link active" id="pills-info-tab" data-toggle="pill" href="#pills-info" role="tab" aria-controls="pills-info" aria-selected="true">Info</a>
   </li>
@@ -88,6 +89,84 @@
       </div>
     {% endif %}   
   </div>
-  <div class="tab-pane fade" id="pills-appointment" role="tabpanel" aria-labelledby="pills-appointment-tab">...</div>
+  <div class="tab-pane fade" id="pills-appointment" role="tabpanel" aria-labelledby="pills-appointment-tab">
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#createAppointment" role="button" aria-expanded="false" aria-controls="createAppointment">
+          <i class="fa fa-plus" aria-hidden="true"></i> Create Appointment
+        </a>
+      </li>
+    </ul>
+    <div class="collapse" id="createAppointment">
+      <form action="" method="post">
+        {% csrf_token %}
+        {% for hidden_field in appointment_form.hidden_fields %}
+          {{ hidden_field }}
+        {% endfor %}
+
+        {% if appointment_form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            {% for error in appointment_form.non_field_errors %}
+              {{ error }}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% for field in appointment_form.visible_fields %}
+          <div class="form-group row">
+            {# {{ field.label_tag }} #}
+            <label for="{{ field.id_for_label }}" class="col-form-label col-sm-2 col-form-label-sm">{{ field.label }}</label>
+
+            <div class="col-sm-6">
+              {% if appointment_form.is_bound %}
+                {% if field.errors %}
+                  {% render_field field class="form-control form-control-sm is-invalid" %}
+                  {% for error in field.errors %}
+                    <div class="invalid-feedback">
+                      {{ error }}
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  {% render_field field class="form-control form-control-sm is-valid" %}
+                {% endif %}
+              {% else %}
+                {% render_field field class="form-control form-control-sm" %}
+              {% endif %}
+
+              {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+        <div class="form-group">
+          <button type="submit" class="btn btn-success">
+            <i class="fa fa-plus" aria-hidden="true"></i> Create
+          </button>
+        </div>
+      </form>
+    </div>
+    {% if appointments.exists %}
+      <table class="table table-borderless table-sm">
+        <tbody>
+          {% for appointment in appointments %}
+            <tr>
+              <th scope="row">{{appointment.appointment_status}}</th>
+              <td>{{appointment.appointment_date}}</td>
+              <td>{{appointment.first_attempt}}</td>
+              <td>{{appointment.second_attempt}}</td>
+              <td>{{appointment.third_attempt}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="text-secondary">No appointments set for this patient.</p>
+    {% endif %}
+  </div>
 </div>
 {% endblock content %}
+
+{% block custom_script %}
+  {{appointment_form.media}}
+{% endblock custom_script %}

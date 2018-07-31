@@ -1,3 +1,4 @@
+from tempus_dominus.widgets import DateTimePicker
 from django.forms import modelform_factory
 from django import forms
 
@@ -11,8 +12,14 @@ PatientForm = modelform_factory(Patient, fields=('mrn', 'name', 'address', 'emai
 ReferralForm = modelform_factory(Referral, fields=('patient', 'notes', 'referred_by',
                                                    'referred_to', 'reason_for_referral'))
 TempReferralForm = modelform_factory(TempReferral, exclude=())
-AppointmentForm = modelform_factory(Appointment, fields=('appointment_status', 'appointment_date', 'first_attempt',
-                                                         'second_attempt', 'third_attempt'))
+AppointmentForm = modelform_factory(Appointment,
+                                    fields=('appointment_status', 'appointment_date', 'first_attempt',
+                                            'second_attempt', 'third_attempt'),
+                                    widgets={'appointment_date': DateTimePicker(),
+                                             'first_attempt': DateTimePicker(),
+                                             'second_attempt': DateTimePicker(),
+                                             'third_attempt': DateTimePicker()}
+                                    )
 
 
 # non model forms

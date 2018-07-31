@@ -2,6 +2,7 @@ Babel==2.5.3
 Django==2.0.2
 django-environ==0.4.4
 django-phonenumber-field==2.0.0
+django-widget-tweaks==1.4.2
 phonenumberslite==8.9.0
 psycopg2==2.7.4
 psycopg2-binary==2.7.4
