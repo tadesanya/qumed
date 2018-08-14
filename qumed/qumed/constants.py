@@ -4,7 +4,6 @@ CHAR_LENGTH_32 = 32
 CHAR_LENGTH_128 = 128
 
 APPOINTMENT_STATUS = (
-    ('unset', '------------'),
     ('lmts', 'LMTS'),
     ('scheduled', 'SCHEDULED'),
     ('complete', 'COMPLETE')

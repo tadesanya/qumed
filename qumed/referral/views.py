@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect, get_object_or_404, ge
 from django.views.generic import View
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -76,9 +76,11 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = {}
-        appointments = Appointment.objects.filter(practice=self.request.user.practice, patient=self.object)
+        patient = self.object
+        practice = self.request.user.practice
+        appointments = Appointment.objects.filter(practice=practice, patient=patient)
         context['appointments'] = appointments
-        context['appointment_form'] = AppointmentForm()
+        context['appointment_form'] = AppointmentForm(initial={'practice': practice.id, 'patient': patient.id})
         kwargs.update(context)
         return super().get_context_data(**kwargs)
 
@@ -263,3 +265,30 @@ class OnboardingStage2(LoginRequiredMixin, CreateView):
         temp_referral.delete()
 
         return HttpResponseRedirect(self.get_success_url())
+
+
+class AppointmentCreateView(LoginRequiredMixin, View):
+
+    def post(self, request):
+        form = AppointmentForm(request.POST)
+        referer_url = self.request.META.get('HTTP_REFERER')
+
+        if form.is_valid():
+            data = form.cleaned_data
+            data['patient'] = get_object_or_404(Patient, id=data['patient'])
+            data['practice'] = get_object_or_404(Practice, id=data['practice'])
+            appointment = Appointment.objects.create(**data)
+            message = 'Appointment created.'
+            messages.success(request, message)
+
+            return HttpResponseRedirect(referer_url)
+        else:
+            message = form.errors
+            messages.error(request, message)
+            return HttpResponseRedirect(referer_url)
+
+
+class AppointmentEditView(LoginRequiredMixin, UpdateView):
+    model = Appointment
+    fields = ['appointment_status', 'first_attempt', 'second_attempt', 'third_attempt', 'appointment_date']
+    template_name = 'referral/appointment_update_form.html'

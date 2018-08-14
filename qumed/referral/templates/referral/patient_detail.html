@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load widget_tweaks %}
 
+{% block custom_style %}
+{% endblock custom_style %}
+
 {% block title %}Patient Detail{% endblock %}
 
 {% block breadcrumb %}
@@ -98,7 +101,8 @@
       </li>
     </ul>
     <div class="collapse" id="createAppointment">
-      <form action="" method="post">
+      {# Create appointment form #}
+      <form action="{% url 'referral:create_appointment' %}" method="post">
         {% csrf_token %}
         {% for hidden_field in appointment_form.hidden_fields %}
           {{ hidden_field }}
@@ -148,14 +152,27 @@
     </div>
     {% if appointments.exists %}
       <table class="table table-borderless table-sm">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Status</th>
+            <th scope="col">First Attempt</th>
+            <th scope="col">Second Attempt</th>
+            <th scope="col">Third Attempt</th>
+            <th scope="col">Appointment Date</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
         <tbody>
           {% for appointment in appointments %}
             <tr>
-              <th scope="row">{{appointment.appointment_status}}</th>
-              <td>{{appointment.appointment_date}}</td>
+              <th scope="row">{{appointment.appointment_status|upper}}</th>
               <td>{{appointment.first_attempt}}</td>
               <td>{{appointment.second_attempt}}</td>
               <td>{{appointment.third_attempt}}</td>
+              <td>{{appointment.appointment_date}}</td>
+              <td><a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+              <td><a href="#"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a></td>
             </tr>
           {% endfor %}
         </tbody>
@@ -167,6 +184,6 @@
 </div>
 {% endblock content %}
 
-{% block custom_script %}
-  {{appointment_form.media}}
+{% block custom_script %}  
+{{ appointment_form.media }}
 {% endblock custom_script %}

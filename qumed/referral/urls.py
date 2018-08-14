@@ -25,5 +25,7 @@ urlpatterns = [
          name='onboard_3'),
     path('onboard/error/',
          TemplateView.as_view(template_name='referral/onboard_error.html'),
-         name='onboard_error')
+         name='onboard_error'),
+
+    path('appointment/create/', views.AppointmentCreateView.as_view(), name='create_appointment'),
 ]

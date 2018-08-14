@@ -91,8 +91,7 @@ class Appointment(models.Model):
     appointment_date = models.DateTimeField('Appointment Date', null=True, blank=True)
     appointment_status = models.CharField('Appointment Status',
                                           max_length=CHAR_LENGTH_16,
-                                          choices=APPOINTMENT_STATUS,
-                                          default='unset')
+                                          choices=APPOINTMENT_STATUS)
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, editable=False)
     practice = models.ForeignKey(Practice, on_delete=models.CASCADE, editable=False)
