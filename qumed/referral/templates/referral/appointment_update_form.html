@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Update Appointment{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'referral:patient_detail' pk=patient.id %}">patient</a></li> 
+  <li class="breadcrumb-item">appointment</li>
+  <li class="breadcrumb-item active">update</li> 
+{% endblock breadcrumb %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Update Appointment for {{ patient.name|title }}:</h4>
+            <form method="post">
+            {% csrf_token %}
+
+            {% for hidden in form.hidden_fields %}
+              {{ hidden }}
+            {% endfor %}
+
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger" role="alert">
+                {% for error in form.non_field_errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            {% for field in form.visible_fields %}
+            {% with data_target='#'|add:field.id_for_label %}
+              <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% render_field field class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target=data_target autocomplete="off" %}
+                {% for error in field.errors %}
+                  <span class="help-block text-danger">{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endwith %}
+            {% endfor %}
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-check-square-o" aria-hidden="true"></i> Save
+              </button>
+            </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block custom_script %}
+    {% include "../tempus_dominus.html" %}
+    <script type="text/javascript">
+        $(function() {
+            var format = 'YYYY-MM-DD HH:mm:ss';
+            var firstAttemptValue = $('#id_first_attempt').val()
+            var secondAttemptValue = $('#id_second_attempt').val()
+            var thirdAttemptValue = $('#id_third_attempt').val()
+            var appointmentDateValue = $('#id_appointment_date').val()
+
+            $('#id_first_attempt').datetimepicker({format: format, date: null});
+            $('#id_first_attempt').datetimepicker('date', moment(firstAttemptValue, format).toDate());
+
+            $('#id_second_attempt').datetimepicker({format: format, date: null});
+            $('#id_second_attempt').datetimepicker('date', moment(secondAttemptValue, format).toDate());
+
+            $('#id_third_attempt').datetimepicker({format: format, date: null});
+            $('#id_third_attempt').datetimepicker('date', moment(thirdAttemptValue, format).toDate());
+
+            $('#id_appointment_date').datetimepicker({format: format, date: null});
+            $('#id_appointment_date').datetimepicker('date', moment(appointmentDateValue, format).toDate());
+         });
+    </script>
+{% endblock custom_script %}

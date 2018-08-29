@@ -28,4 +28,5 @@ urlpatterns = [
          name='onboard_error'),
 
     path('appointment/create/', views.AppointmentCreateView.as_view(), name='create_appointment'),
+    path('appointment/update/<int:pk>/', views.AppointmentEditView.as_view(), name='update_appointment')
 ]

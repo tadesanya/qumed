@@ -12,7 +12,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.contrib.auth import login
 
-from .forms import PracticeForm, ReferralForm, AcceptRejectForm, TempReferralForm, AppointmentForm
+from .forms import PracticeForm, ReferralForm, AcceptRejectForm, TempReferralForm, AppointmentCreateForm, \
+    AppointmentForm
 from .models import Patient, Practice, Referral, TempReferral, Appointment
 from qumed.constants import PAGINATE_30, REFERRAL_STATUS
 from account.forms import CustomUserCreationForm
@@ -80,7 +81,7 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
         practice = self.request.user.practice
         appointments = Appointment.objects.filter(practice=practice, patient=patient)
         context['appointments'] = appointments
-        context['appointment_form'] = AppointmentForm(initial={'practice': practice.id, 'patient': patient.id})
+        context['appointment_form'] = AppointmentCreateForm(initial={'practice': practice.id, 'patient': patient.id})
         kwargs.update(context)
         return super().get_context_data(**kwargs)
 
@@ -270,7 +271,7 @@ class OnboardingStage2(LoginRequiredMixin, CreateView):
 class AppointmentCreateView(LoginRequiredMixin, View):
 
     def post(self, request):
-        form = AppointmentForm(request.POST)
+        form = AppointmentCreateForm(request.POST)
         referer_url = self.request.META.get('HTTP_REFERER')
 
         if form.is_valid():
@@ -290,5 +291,19 @@ class AppointmentCreateView(LoginRequiredMixin, View):
 
 class AppointmentEditView(LoginRequiredMixin, UpdateView):
     model = Appointment
-    fields = ['appointment_status', 'first_attempt', 'second_attempt', 'third_attempt', 'appointment_date']
+    form_class = AppointmentForm
     template_name = 'referral/appointment_update_form.html'
+
+    def get_context_data(self, **kwargs):
+        self.object = self.get_object()
+        kwargs['patient'] = self.object.patient
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        message = 'Appointment updated.'
+        messages.success(self.request, message)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        url = self.request.META.get('HTTP_REFERER')
+        return url

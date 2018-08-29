@@ -12,9 +12,17 @@ PatientForm = modelform_factory(Patient, fields=('mrn', 'name', 'address', 'emai
 ReferralForm = modelform_factory(Referral, fields=('patient', 'notes', 'referred_by',
                                                    'referred_to', 'reason_for_referral'))
 TempReferralForm = modelform_factory(TempReferral, exclude=())
+AppointmentForm = modelform_factory(Appointment, fields=('appointment_status', 'first_attempt', 'second_attempt',
+                                                         'third_attempt', 'appointment_date'))
 
 
-class AppointmentForm(forms.Form):
+# non model forms
+class AcceptRejectForm(forms.Form):
+    referral_id = forms.UUIDField()
+    referral_status = forms.ChoiceField(choices=REFERRAL_STATUS, widget=forms.HiddenInput)
+
+
+class AppointmentCreateForm(forms.Form):
     patient = forms.CharField(widget=forms.HiddenInput())
     practice = forms.CharField(widget=forms.HiddenInput())
     appointment_status = forms.ChoiceField(choices=APPOINTMENT_STATUS)
@@ -62,9 +70,3 @@ class AppointmentForm(forms.Form):
         input_formats=('%m/%d/%Y %I:%M %p',),
         required=False
     )
-
-
-# non model forms
-class AcceptRejectForm(forms.Form):
-    referral_id = forms.UUIDField()
-    referral_status = forms.ChoiceField(choices=REFERRAL_STATUS, widget=forms.HiddenInput)

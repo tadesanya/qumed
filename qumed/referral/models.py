@@ -97,4 +97,4 @@ class Appointment(models.Model):
     practice = models.ForeignKey(Practice, on_delete=models.CASCADE, editable=False)
 
     def __str__(self):
-        return '{} ({})'.format(self.id, self.appointment_date.strftime('%c'))
+        return '{}'.format(self.id)

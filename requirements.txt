@@ -2,6 +2,7 @@ Babel==2.5.3
 Django==2.0.2
 django-environ==0.4.4
 django-phonenumber-field==2.0.0
+-e git+git@github.com:tadesanya/django-tempus-dominus.git@ba05d392a867cd16ad9ffaada7b64799cc8a0629#egg=django_tempus_dominus
 django-widget-tweaks==1.4.2
 phonenumberslite==8.9.0
 psycopg2==2.7.4

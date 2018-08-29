@@ -118,7 +118,6 @@
 
         {% for field in appointment_form.visible_fields %}
           <div class="form-group row">
-            {# {{ field.label_tag }} #}
             <label for="{{ field.id_for_label }}" class="col-form-label col-sm-2 col-form-label-sm">{{ field.label }}</label>
 
             <div class="col-sm-6">
@@ -167,11 +166,11 @@
           {% for appointment in appointments %}
             <tr>
               <th scope="row">{{appointment.appointment_status|upper}}</th>
-              <td>{{appointment.first_attempt}}</td>
-              <td>{{appointment.second_attempt}}</td>
-              <td>{{appointment.third_attempt}}</td>
-              <td>{{appointment.appointment_date}}</td>
-              <td><a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+              <td>{{appointment.first_attempt|default_if_none:'-----'}}</td>
+              <td>{{appointment.second_attempt|default_if_none:'-----'}}</td>
+              <td>{{appointment.third_attempt|default_if_none:'-----'}}</td>
+              <td>{{appointment.appointment_date|default_if_none:'-----'}}</td>
+              <td><a href="{% url 'referral:update_appointment' pk=appointment.id %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
               <td><a href="#"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a></td>
             </tr>
           {% endfor %}
