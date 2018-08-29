@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect, get_object_or_404, ge
 from django.views.generic import View
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.views.generic import ListView, CreateView, DetailView, UpdateView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -307,3 +307,15 @@ class AppointmentEditView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         url = self.request.META.get('HTTP_REFERER')
         return url
+
+
+class AppointmentListView(LoginRequiredMixin, ListView):
+    model = Appointment
+    paginate_by = PAGINATE_30
+    context_object_name = 'appointments'
+    template_name = 'referral/appointment_list.html'
+
+    def get_queryset(self):
+        practice = self.request.user.practice
+        queryset = Appointment.objects.filter(practice=practice)
+        return queryset

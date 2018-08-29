@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}View Appointments{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'referral:list_appointments' %}">appointments</a></li> 
+  <li class="breadcrumb-item active">all</li> 
+{% endblock breadcrumb %}
+
+{% block content %}
+    {% if appointments %}
+      <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Patient</th>
+          <th scope="col">Status</th>
+          <th scope="col">First Attempt</th>
+          <th scope="col">Second Attempt</th>
+          <th scope="col">Third Attempt</th>
+          <th scope="col">Appointment Date</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appointment in appointments %}
+          <tr>
+            <th scope="row"><a href="{% url 'referral:patient_detail' pk=appointment.patient.id %}">{{appointment.patient.name|title}}</a></td>
+            <td>{{appointment.appointment_status|upper}}</td>
+            <td>{{appointment.first_attempt|default_if_none:'-----'}}</td>
+            <td>{{appointment.second_attempt|default_if_none:'-----'}}</td>
+            <td>{{appointment.third_attempt|default_if_none:'-----'}}</td>
+            <td>{{appointment.appointment_date|default_if_none:'-----'}}</td>
+            <td><a href="{% url 'referral:update_appointment' pk=appointment.id %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+            <td><a href="#"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      </table>
+      {% include "paginate.html" %}
+    {% else %}
+      <p class="text-secondary">There are no appointments.</p>
+    {% endif %}
+{% endblock content %}
