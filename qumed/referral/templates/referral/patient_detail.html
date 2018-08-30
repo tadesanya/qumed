@@ -121,28 +121,33 @@
             <label for="{{ field.id_for_label }}" class="col-form-label col-sm-2 col-form-label-sm">{{ field.label }}</label>
 
             <div class="col-sm-6">
-              {% if appointment_form.is_bound %}
-                {% if field.errors %}
-                  {% render_field field class="form-control form-control-sm is-invalid" %}
-                  {% for error in field.errors %}
-                    <div class="invalid-feedback">
-                      {{ error }}
-                    </div>
-                  {% endfor %}
+              {% with data_target='#'|add:field.id_for_label %}
+                {% if appointment_form.is_bound %}
+                  {% if field.errors %}
+                    {% render_field field class="form-control form-control-sm is-invalid" %}
+                    {% for error in field.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    {% render_field field class="form-control form-control-sm is-valid" %}
+                  {% endif %}
                 {% else %}
-                  {% render_field field class="form-control form-control-sm is-valid" %}
+                  {% render_field field class="form-control form-control-sm datetimepicker-input" data-toggle="datetimepicker" data-target=data_target autocomplete="off" %}
                 {% endif %}
-              {% else %}
-                {% render_field field class="form-control form-control-sm" %}
-              {% endif %}
 
-              {% if field.help_text %}
-                <small class="form-text text-muted">{{ field.help_text }}</small>
-              {% endif %}
+                {% if field.help_text %}
+                  <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+              {% endwith %}
             </div>
           </div>
         {% endfor %}
         <div class="form-group">
+          <button type="reset" class="btn btn-danger" data-toggle="collapse" href="#createAppointment" role="button" aria-expanded="false" aria-controls="createAppointment">
+            <i class="fa fa-ban" aria-hidden="true"></i> Cancel
+          </button>
           <button type="submit" class="btn btn-success">
             <i class="fa fa-plus" aria-hidden="true"></i> Create
           </button>
@@ -184,5 +189,26 @@
 {% endblock content %}
 
 {% block custom_script %}  
-{{ appointment_form.media }}
+  {% include "../tempus_dominus.html" %}
+  <script type="text/javascript">
+    $(function() {
+        var format = 'YYYY-MM-DD HH:mm:ss';
+        var firstAttemptValue = $('#id_first_attempt').val()
+        var secondAttemptValue = $('#id_second_attempt').val()
+        var thirdAttemptValue = $('#id_third_attempt').val()
+        var appointmentDateValue = $('#id_appointment_date').val()
+
+        $('#id_first_attempt').datetimepicker({format: format, date: null});
+        $('#id_first_attempt').datetimepicker('date', moment(firstAttemptValue, format).toDate());
+
+        $('#id_second_attempt').datetimepicker({format: format, date: null});
+        $('#id_second_attempt').datetimepicker('date', moment(secondAttemptValue, format).toDate());
+
+        $('#id_third_attempt').datetimepicker({format: format, date: null});
+        $('#id_third_attempt').datetimepicker('date', moment(thirdAttemptValue, format).toDate());
+
+        $('#id_appointment_date').datetimepicker({format: format, date: null});
+        $('#id_appointment_date').datetimepicker('date', moment(appointmentDateValue, format).toDate());
+     });
+  </script>
 {% endblock custom_script %}

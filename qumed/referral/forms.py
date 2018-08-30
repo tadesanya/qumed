@@ -1,6 +1,5 @@
 from django.forms import modelform_factory
 from django import forms
-from tempus_dominus.widgets import DateTimePicker
 
 from .models import Practice, Patient, Referral, TempReferral, Appointment
 from qumed.constants import REFERRAL_STATUS, APPOINTMENT_STATUS
@@ -27,46 +26,7 @@ class AppointmentCreateForm(forms.Form):
     practice = forms.CharField(widget=forms.HiddenInput())
     appointment_status = forms.ChoiceField(choices=APPOINTMENT_STATUS)
 
-    first_attempt = forms.DateTimeField(
-        widget=DateTimePicker(
-            options={
-                'useCurrent': True,
-                'format': '%m/%d/%Y %I:%M %p'
-            }
-        ),
-        input_formats=('%m/%d/%Y %I:%M %p',),
-        required=False
-    )
-
-    second_attempt = forms.DateTimeField(
-        widget=DateTimePicker(
-            options={
-                'useCurrent': True,
-                'format': '%m/%d/%Y %I:%M %p'
-            }
-        ),
-        input_formats=('%m/%d/%Y %I:%M %p',),
-        required=False
-    )
-
-    third_attempt = forms.DateTimeField(
-        widget=DateTimePicker(
-            options={
-                'useCurrent': True,
-                'format': '%m/%d/%Y %I:%M %p'
-            }
-        ),
-        input_formats=('%m/%d/%Y %I:%M %p',),
-        required=False
-    )
-
-    appointment_date = forms.DateTimeField(
-        widget=DateTimePicker(
-            options={
-                'useCurrent': True,
-                'format': '%m/%d/%Y %I:%M %p'
-            }
-        ),
-        input_formats=('%m/%d/%Y %I:%M %p',),
-        required=False
-    )
+    first_attempt = forms.CharField()
+    second_attempt = forms.CharField()
+    third_attempt = forms.CharField()
+    appointment_date = forms.CharField()
