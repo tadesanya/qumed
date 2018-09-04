@@ -9,8 +9,25 @@
       <div class="card-body">
         <form method="post">
           {% csrf_token %}
-          {{ form.as_p }}
-          <button type="submit">Sign up</button>
+          {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+          {% endfor %}
+
+          {% for field in form.visible_fields %}
+            <div class="form-group">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field|add_class:'form-control' }}
+              {% for error in field.errors %}
+                <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% endfor %}
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-success">
+              <i class="fa fa-user-plus" aria-hidden="true"></i> Sign up
+            </button>
+          </div>
         </form>
         <div class="text-center">
           <a class="d-block small mt-3" href="{% url 'login' %}">Login Page</a>

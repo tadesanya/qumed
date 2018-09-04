@@ -10,7 +10,22 @@
 {% block content %}
   <form method="post" action="">
       {% csrf_token %}
-      {{ form.as_p }}
-      <input class="btn btn-primary" type="submit" value="Save" />
+      {% for hidden in form.hidden_fields %}
+        {{ hidden }}
+      {% endfor %}
+
+      {% for field in form.visible_fields %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field|add_class:'form-control' }}
+          {% for error in field.errors %}
+            <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <div class="form-group">
+        <input class="btn btn-primary" type="submit" value="Save" />
+      </div>
   </form>
 {% endblock content %}
