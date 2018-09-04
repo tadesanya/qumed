@@ -46,6 +46,29 @@
         </li>
       </ul>
     </li>
+    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Appointments">
+      <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAppointments" data-parent="#sideBarAccordion">
+        <i class="fa fa-fw fa-calendar"></i>
+        <span class="nav-link-text">Appointments</span>
+      </a>
+      <ul class="sidenav-second-level collapse" id="collapseAppointments">
+        <li>
+          <a href="{% url 'referral:list_appointments' filter='all' %}">All</a>
+        </li>
+        <li>
+          <a href="{% url 'referral:list_appointments' filter='today' %}">Today</a>
+        </li>
+        <li>
+          <a href="{% url 'referral:list_appointments' filter='week' %}">This Week</a>
+        </li>
+        <li>
+          <a href="{% url 'referral:list_appointments' filter='month' %}">This Month</a>
+        </li>
+        <li>
+          <a href="{% url 'referral:list_appointments' filter='upcoming' %}">Upcoming</a>
+        </li>
+      </ul>
+    </li>
   </ul>
   <ul class="navbar-nav sidenav-toggler">
     <li class="nav-item">

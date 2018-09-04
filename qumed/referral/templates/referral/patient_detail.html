@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block custom_style %}
+{% endblock custom_style %}
 
 {% block title %}Patient Detail{% endblock %}
 
@@ -8,57 +12,203 @@
 {% endblock breadcrumb %}
 
 {% block content %}
-<div class="row mb-1">
-  <div class="col-md-3"><p><strong>ID: </strong>{{patient.id}}</p></div>
-  <div class="col-md-3"><p><strong>Name: </strong>{{patient.name}}</p></div>
-  <div class="col-md-6"><p><strong>MRN: </strong>{{patient.mrn}}</p></div>
-</div>
-
 <div class="row mb-3">
-  <div class="col-md-3"><p><strong>Telephone: </strong>{{patient.telephone}}</p></div>
-  <div class="col-md-3"><p><strong>Email: </strong>{{patient.email}}</p></div>
-  <div class="col-md-6"><p><strong>Address: </strong>{{patient.address}}</p></div>
-</div>
-
-<div class="row mb-3">
+  <div class="col-md-1">
+    {% if patient.creator_practice == request.user.practice %}
+      <span class="badge badge-dark">In-house</span>
+    {% else %}
+      <span class="badge badge-success">Referred</span>
+    {% endif %}
+  </div>
   <div class="col-md-3">
-    <a href="{% url 'referral:create_referral' pk=patient.id %}" class="btn btn-success btn-block">Refer this patient <i class="fa fa-paper-plane"></i></a>
+    <strong class="text-secondary">{{patient.name|title}}</strong>
   </div>
 </div>
 
-{% if patient.referral_set.all.exists %}
-<div class="row my-3">
-  <div class="col-md-12">
-    <h6>Referrals associated with this patient:</h6>
-    <table class="table table-hover table-sm">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">#ID</th>
-          <th scope="col">Date Referred</th>
-          <th scope="col">Referral Status</th>
-          <th scope="col">Reason For Referral</th>
-          <th scope="col">Notes</th>
-          <th scope="col">Referred To</th>
-          <th scope="col">Appointment Status</th>
-          <th scope="col">Appointment Date</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for referral in patient.referral_set.all %}
-        <tr>
-          <th scope="row">{{referral.id}}</th>
-          <td>{{referral.date_referred}}</td>
-          <td>{{referral.referral_status}}</td>
-          <td>{{referral.reason_for_referral}}</td>
-          <td>{{referral.notes}}</td>
-          <td>{{referral.referred_to}}</td>
-          <td>{{referral.appointment_status}}</td>
-          <td>{{referral.appointment_date}}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-    </table>
+<!-- Tab section -->
+<ul class="nav nav-pills nav-justified mb-3" id="pills-tab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="pills-info-tab" data-toggle="pill" href="#pills-info" role="tab" aria-controls="pills-info" aria-selected="true">Info</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="pills-referral-tab" data-toggle="pill" href="#pills-referral" role="tab" aria-controls="pills-referral" aria-selected="false">Referral</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="pills-appointment-tab" data-toggle="pill" href="#pills-appointment" role="tab" aria-controls="pills-appointment" aria-selected="false">Appointment</a>
+  </li>
+  <li class="nav-item">
+    <a href="{% url 'referral:create_referral' pk=patient.id %}" class="nav-link">Refer this patient <i class="fa fa-paper-plane"></i></a>
+  </li>
+</ul>
+
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-info" role="tabpanel" aria-labelledby="pills-info-tab">
+    <div class="row mb-1">
+      <div class="col-md-3"><p><strong>ID: </strong>{{patient.id}}</p></div>
+      <div class="col-md-3"><p><strong>Name: </strong>{{patient.name}}</p></div>
+      <div class="col-md-6"><p><strong>MRN: </strong>{{patient.mrn}}</p></div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-3"><p><strong>Telephone: </strong>{{patient.telephone}}</p></div>
+      <div class="col-md-3"><p><strong>Email: </strong>{{patient.email}}</p></div>
+      <div class="col-md-6"><p><strong>Address: </strong>{{patient.address}}</p></div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="pills-referral" role="tabpanel" aria-labelledby="pills-referral-tab">
+    {% if patient.referral_set.all.exists %}
+      <div class="row my-3">
+        <div class="col-md-12">
+          <h6>Referrals associated with this patient:</h6>
+          <table class="table table-hover table-sm">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">#ID</th>
+                <th scope="col">Date Referred</th>
+                <th scope="col">Referral Status</th>
+                <th scope="col">Reason For Referral</th>
+                <th scope="col">Notes</th>
+                <th scope="col">Referred To</th>
+                <th scope="col">Appointment Status</th>
+                <th scope="col">Appointment Date</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for referral in patient.referral_set.all %}
+              <tr>
+                <th scope="row">{{referral.id}}</th>
+                <td>{{referral.date_referred}}</td>
+                <td>{{referral.referral_status}}</td>
+                <td>{{referral.reason_for_referral}}</td>
+                <td>{{referral.notes}}</td>
+                <td>{{referral.referred_to}}</td>
+                <td>{{referral.appointment_status}}</td>
+                <td>{{referral.appointment_date}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          </table>
+        </div>
+      </div>
+    {% endif %}   
+  </div>
+  <div class="tab-pane fade" id="pills-appointment" role="tabpanel" aria-labelledby="pills-appointment-tab">
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#createAppointment" role="button" aria-expanded="false" aria-controls="createAppointment">
+          <i class="fa fa-plus" aria-hidden="true"></i> Create Appointment
+        </a>
+      </li>
+    </ul>
+    <div class="collapse" id="createAppointment">
+      {# Create appointment form #}
+      <form action="{% url 'referral:create_appointment' %}" method="post">
+        {% csrf_token %}
+        {% for hidden_field in appointment_form.hidden_fields %}
+          {{ hidden_field }}
+        {% endfor %}
+
+        {% if appointment_form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            {% for error in appointment_form.non_field_errors %}
+              {{ error }}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% for field in appointment_form.visible_fields %}
+          <div class="form-group row">
+            <label for="{{ field.id_for_label }}" class="col-form-label col-sm-2 col-form-label-sm">{{ field.label }}</label>
+
+            <div class="col-sm-6">
+              {% with data_target='#'|add:field.id_for_label %}
+                {% if appointment_form.is_bound %}
+                  {% if field.errors %}
+                    {% render_field field class="form-control form-control-sm is-invalid" %}
+                    {% for error in field.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    {% render_field field class="form-control form-control-sm is-valid" %}
+                  {% endif %}
+                {% else %}
+                  {% render_field field class="form-control form-control-sm datetimepicker-input" data-toggle="datetimepicker" data-target=data_target autocomplete="off" %}
+                {% endif %}
+
+                {% if field.help_text %}
+                  <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+              {% endwith %}
+            </div>
+          </div>
+        {% endfor %}
+        <div class="form-group">
+          <button type="reset" class="btn btn-danger" data-toggle="collapse" href="#createAppointment" role="button" aria-expanded="false" aria-controls="createAppointment">
+            <i class="fa fa-ban" aria-hidden="true"></i> Cancel
+          </button>
+          <button type="submit" class="btn btn-success">
+            <i class="fa fa-plus" aria-hidden="true"></i> Create Appointment
+          </button>
+        </div>
+      </form>
+    </div>
+    {% if appointments.exists %}
+      <table class="table table-borderless table-sm">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Status</th>
+            <th scope="col">First Attempt</th>
+            <th scope="col">Second Attempt</th>
+            <th scope="col">Third Attempt</th>
+            <th scope="col">Appointment Date</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appointment in appointments %}
+            <tr>
+              <th scope="row">{{appointment.appointment_status|upper}}</th>
+              <td>{{appointment.first_attempt|default_if_none:'-----'}}</td>
+              <td>{{appointment.second_attempt|default_if_none:'-----'}}</td>
+              <td>{{appointment.third_attempt|default_if_none:'-----'}}</td>
+              <td>{{appointment.appointment_date|default_if_none:'-----'}}</td>
+              <td><a href="{% url 'referral:update_appointment' pk=appointment.id %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+              <td><a href="{% url 'referral:delete_appointment' pk=appointment.id %}"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="text-secondary">No appointments set for this patient.</p>
+    {% endif %}
   </div>
 </div>
-{% endif %}
 {% endblock content %}
+
+{% block custom_script %}  
+  {% include "../tempus_dominus.html" %}
+  <script type="text/javascript">
+    $(function() {
+        var format = 'YYYY-MM-DD HH:mm:ss';
+        var firstAttemptValue = $('#id_first_attempt').val()
+        var secondAttemptValue = $('#id_second_attempt').val()
+        var thirdAttemptValue = $('#id_third_attempt').val()
+        var appointmentDateValue = $('#id_appointment_date').val()
+
+        $('#id_first_attempt').datetimepicker({format: format, date: null});
+        $('#id_first_attempt').datetimepicker('date', moment(firstAttemptValue, format).toDate());
+
+        $('#id_second_attempt').datetimepicker({format: format, date: null});
+        $('#id_second_attempt').datetimepicker('date', moment(secondAttemptValue, format).toDate());
+
+        $('#id_third_attempt').datetimepicker({format: format, date: null});
+        $('#id_third_attempt').datetimepicker('date', moment(thirdAttemptValue, format).toDate());
+
+        $('#id_appointment_date').datetimepicker({format: format, date: null});
+        $('#id_appointment_date').datetimepicker('date', moment(appointmentDateValue, format).toDate());
+     });
+  </script>
+{% endblock custom_script %}

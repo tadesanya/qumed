@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect, get_object_or_404, ge
 from django.views.generic import View
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -11,10 +11,12 @@ from django.db.models import Q
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.contrib.auth import login
+from django.utils import timezone
 
-from .forms import PracticeForm, ReferralForm, AcceptRejectForm, TempReferralForm
-from .models import Patient, Practice, Referral, TempReferral
-from qumed.constants import PAGINATE_30, REFERRAL_STATUS
+from .forms import PracticeForm, ReferralForm, AcceptRejectForm, TempReferralForm, AppointmentCreateForm, \
+    AppointmentForm
+from .models import Patient, Practice, Referral, TempReferral, Appointment
+from qumed.constants import PAGINATE_30, REFERRAL_STATUS, APPOINTMENT_FILTER
 from account.forms import CustomUserCreationForm
 
 
@@ -73,6 +75,16 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
     model = Patient
     context_object_name = 'patient'
     template_name = 'referral/patient_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        patient = self.object
+        practice = self.request.user.practice
+        appointments = Appointment.objects.filter(practice=practice, patient=patient)
+        context['appointments'] = appointments
+        context['appointment_form'] = AppointmentCreateForm(initial={'practice': practice.id, 'patient': patient.id})
+        kwargs.update(context)
+        return super().get_context_data(**kwargs)
 
 
 class ReferralCreateView(LoginRequiredMixin, View):
@@ -255,3 +267,103 @@ class OnboardingStage2(LoginRequiredMixin, CreateView):
         temp_referral.delete()
 
         return HttpResponseRedirect(self.get_success_url())
+
+
+class AppointmentCreateView(LoginRequiredMixin, View):
+
+    def post(self, request):
+        form = AppointmentCreateForm(request.POST)
+        referer_url = self.request.META.get('HTTP_REFERER')
+
+        if form.is_valid():
+            data = form.cleaned_data
+            data['patient'] = get_object_or_404(Patient, id=data['patient'])
+            data['practice'] = get_object_or_404(Practice, id=data['practice'])
+            appointment = Appointment.objects.create(**data)
+            message = 'Appointment created.'
+            messages.success(request, message)
+
+            return HttpResponseRedirect(referer_url)
+        else:
+            message = form.errors
+            messages.error(request, message)
+            return HttpResponseRedirect(referer_url)
+
+
+class AppointmentEditView(LoginRequiredMixin, UpdateView):
+    model = Appointment
+    form_class = AppointmentForm
+    template_name = 'referral/appointment_update_form.html'
+
+    def get_context_data(self, **kwargs):
+        self.object = self.get_object()
+        kwargs['patient'] = self.object.patient
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        message = 'Appointment updated.'
+        messages.success(self.request, message)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        url = self.request.META.get('HTTP_REFERER')
+        return url
+
+
+class AppointmentListView(LoginRequiredMixin, ListView):
+    model = Appointment
+    paginate_by = PAGINATE_30
+    context_object_name = 'appointments'
+    template_name = 'referral/appointment_list.html'
+
+    def get_queryset(self):
+        practice = self.request.user.practice
+        date_filter = self.kwargs.get('filter', '')
+        if date_filter == APPOINTMENT_FILTER['week']:
+            this_week = timezone.now().isocalendar()[1]
+            queryset = Appointment.objects.filter(practice=practice,
+                                                  appointment_date__isnull=False,
+                                                  appointment_date__week=this_week)
+        elif date_filter == APPOINTMENT_FILTER['month']:
+            this_month = timezone.now().month
+            queryset = Appointment.objects.filter(practice=practice,
+                                                  appointment_date__isnull=False,
+                                                  appointment_date__month=this_month)
+        elif date_filter == APPOINTMENT_FILTER['today']:
+            today = timezone.now().date()
+            queryset = Appointment.objects.filter(practice=practice,
+                                                  appointment_date__isnull=False,
+                                                  appointment_date__date=today)
+        elif date_filter == APPOINTMENT_FILTER['upcoming']:
+            today = timezone.now().date()
+            queryset = Appointment.objects.filter(practice=practice,
+                                                  appointment_date__isnull=False,
+                                                  appointment_date__date__gte=today)
+        else:
+            queryset = Appointment.objects.filter(practice=practice,
+                                                  appointment_date__isnull=False)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['date_filter'] = self.kwargs.get('filter', '')
+        return context
+
+
+class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Appointment
+    template_name = 'referral/appointment_confirm_delete.html'
+    success_url = reverse_lazy('referral:list_appointments', kwargs={'filter': 'all'})
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object, create success message and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        message = 'Appointment deleted.'
+        messages.success(self.request, message)
+        return HttpResponseRedirect(success_url)

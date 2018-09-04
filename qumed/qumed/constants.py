@@ -4,9 +4,9 @@ CHAR_LENGTH_32 = 32
 CHAR_LENGTH_128 = 128
 
 APPOINTMENT_STATUS = (
+    ('lmts', 'LMTS'),
     ('scheduled', 'SCHEDULED'),
-    ('complete', 'COMPLETE'),
-    ('lmts', 'LMTS')
+    ('complete', 'COMPLETE')
 )
 
 # pagination
@@ -17,3 +17,11 @@ REFERRAL_STATUS = (
     ('accepted', 'ACCEPTED'),
     ('rejected', 'REJECTED'),
 )
+
+APPOINTMENT_FILTER = {
+    'all': 'all',
+    'today': 'today',
+    'week': 'week',
+    'month': 'month',
+    'upcoming': 'upcoming'
+}

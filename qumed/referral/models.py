@@ -68,15 +68,6 @@ class Referral(models.Model):
                                     null=True,
                                     related_name='incoming_referrals')
 
-    appointment_status = models.CharField('Appointment Status',
-                                          max_length=CHAR_LENGTH_16,
-                                          choices=APPOINTMENT_STATUS,
-                                          default='lmts')
-    first_attempt = models.DateTimeField('First Attempt', null=True, blank=True)
-    second_attempt = models.DateTimeField('Second Attempt', null=True, blank=True)
-    third_attempt = models.DateTimeField('Third Attempt', null=True, blank=True)
-    appointment_date = models.DateTimeField('Appointment Date', null=True, blank=True)
-
     def __str__(self):
         return str(self.id)
 
@@ -91,3 +82,19 @@ class TempReferral(models.Model):
     referred_by = models.ForeignKey(Practice, on_delete=models.CASCADE)
     referred_to_email = models.EmailField('Email')
     date_referred = models.DateField(auto_now_add=True)
+
+
+class Appointment(models.Model):
+    first_attempt = models.DateTimeField('First Attempt', null=True, blank=True)
+    second_attempt = models.DateTimeField('Second Attempt', null=True, blank=True)
+    third_attempt = models.DateTimeField('Third Attempt', null=True, blank=True)
+    appointment_date = models.DateTimeField('Appointment Date', null=True, blank=True)
+    appointment_status = models.CharField('Appointment Status',
+                                          max_length=CHAR_LENGTH_16,
+                                          choices=APPOINTMENT_STATUS)
+
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, editable=False)
+    practice = models.ForeignKey(Practice, on_delete=models.CASCADE, editable=False)
+
+    def __str__(self):
+        return '{}'.format(self.id)

@@ -28,6 +28,7 @@ EMAIL_USE_TLS=True
 ```
 
 While in your virtualenvwrapper, install all the packages needed
+`pip install git+git://github.com/tadesanya/django-tempus-dominus.git#egg=django_tempus_dominus`
 `pip install -r requirements.txt`
 
 Run Migragrations `python qumed/manage.py migrate`
