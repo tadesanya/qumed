@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Confirm Appointment Deletion{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'referral:list_appointments' filter='all' %}">appointments</a></li> 
+  <li class="breadcrumb-item active">delete</li> 
+{% endblock breadcrumb %}
+
+{% block content %}
+    <form method="post">{% csrf_token %}
+        <p>Are you sure you want to delete the appointment with ID: "{{ object }}"?</p>
+        <input type="submit" value="Delete" class="btn btn-success" />
+    </form>
+{% endblock content %}

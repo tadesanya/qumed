@@ -349,3 +349,21 @@ class AppointmentListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['date_filter'] = self.kwargs.get('filter', '')
         return context
+
+
+class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Appointment
+    template_name = 'referral/appointment_confirm_delete.html'
+    success_url = reverse_lazy('referral:list_appointments', kwargs={'filter': 'all'})
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object, create success message and then redirect to the
+        success URL.
+        """
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        message = 'Appointment deleted.'
+        messages.success(self.request, message)
+        return HttpResponseRedirect(success_url)

@@ -176,7 +176,7 @@
               <td>{{appointment.third_attempt|default_if_none:'-----'}}</td>
               <td>{{appointment.appointment_date|default_if_none:'-----'}}</td>
               <td><a href="{% url 'referral:update_appointment' pk=appointment.id %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
-              <td><a href="#"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a></td>
+              <td><a href="{% url 'referral:delete_appointment' pk=appointment.id %}"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a></td>
             </tr>
           {% endfor %}
         </tbody>
