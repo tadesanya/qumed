@@ -62,11 +62,22 @@
         </div>
         <form action="{% url 'referral:create_practice' %}" method="post">
         {% csrf_token %}
-        <div class="modal-body">
-          {{ practice_form.as_p }}
-        </div>
+        {% for hidden_field in practice_form.hidden_fields %}
+          {{ hidden_field }}
+        {% endfor %}
+
+        {% for field in practice_form.visible_fields %}
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field|add_class:'form-control' }}
+            {% for error in field.errors %}
+              <span class="help-block">{{ error }}</span>
+            {% endfor %}
+          </div>
+        {% endfor %}
+
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+          <button type="reset" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
           <button type="submit" class="btn btn-primary">Create</button>
         </div>
         </form>
