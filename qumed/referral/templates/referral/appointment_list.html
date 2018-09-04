@@ -3,8 +3,8 @@
 {% block title %}View Appointments{% endblock %}
 
 {% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'referral:list_appointments' %}">appointments</a></li> 
-  <li class="breadcrumb-item active">all</li> 
+  <li class="breadcrumb-item"><a href="{% url 'referral:list_appointments' filter='all' %}">appointments</a></li> 
+  <li class="breadcrumb-item active">{{date_filter}}</li> 
 {% endblock breadcrumb %}
 
 {% block content %}

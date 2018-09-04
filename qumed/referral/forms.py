@@ -26,7 +26,7 @@ class AppointmentCreateForm(forms.Form):
     practice = forms.CharField(widget=forms.HiddenInput())
     appointment_status = forms.ChoiceField(choices=APPOINTMENT_STATUS)
 
-    first_attempt = forms.CharField()
-    second_attempt = forms.CharField()
-    third_attempt = forms.CharField()
-    appointment_date = forms.CharField()
+    first_attempt = forms.DateTimeField(required=True)
+    second_attempt = forms.DateTimeField(required=False)
+    third_attempt = forms.DateTimeField(required=False)
+    appointment_date = forms.DateTimeField(required=False)

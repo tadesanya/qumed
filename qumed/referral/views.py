@@ -11,11 +11,12 @@ from django.db.models import Q
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from django.contrib.auth import login
+from django.utils import timezone
 
 from .forms import PracticeForm, ReferralForm, AcceptRejectForm, TempReferralForm, AppointmentCreateForm, \
     AppointmentForm
 from .models import Patient, Practice, Referral, TempReferral, Appointment
-from qumed.constants import PAGINATE_30, REFERRAL_STATUS
+from qumed.constants import PAGINATE_30, REFERRAL_STATUS, APPOINTMENT_FILTER
 from account.forms import CustomUserCreationForm
 
 
@@ -317,5 +318,34 @@ class AppointmentListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         practice = self.request.user.practice
-        queryset = Appointment.objects.filter(practice=practice)
+        date_filter = self.kwargs.get('filter', '')
+        if date_filter == APPOINTMENT_FILTER['week']:
+            this_week = timezone.now().isocalendar()[1]
+            queryset = Appointment.objects.filter(practice=practice,
+                                                  appointment_date__isnull=False,
+                                                  appointment_date__week=this_week)
+        elif date_filter == APPOINTMENT_FILTER['month']:
+            this_month = timezone.now().month
+            queryset = Appointment.objects.filter(practice=practice,
+                                                  appointment_date__isnull=False,
+                                                  appointment_date__month=this_month)
+        elif date_filter == APPOINTMENT_FILTER['today']:
+            today = timezone.now().date()
+            queryset = Appointment.objects.filter(practice=practice,
+                                                  appointment_date__isnull=False,
+                                                  appointment_date__date=today)
+        elif date_filter == APPOINTMENT_FILTER['upcoming']:
+            today = timezone.now().date()
+            queryset = Appointment.objects.filter(practice=practice,
+                                                  appointment_date__isnull=False,
+                                                  appointment_date__date__gte=today)
+        else:
+            queryset = Appointment.objects.filter(practice=practice,
+                                                  appointment_date__isnull=False)
+
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['date_filter'] = self.kwargs.get('filter', '')
+        return context

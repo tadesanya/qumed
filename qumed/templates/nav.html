@@ -53,7 +53,19 @@
       </a>
       <ul class="sidenav-second-level collapse" id="collapseAppointments">
         <li>
-          <a href="{% url 'referral:list_appointments' %}">All</a>
+          <a href="{% url 'referral:list_appointments' filter='all' %}">All</a>
+        </li>
+        <li>
+          <a href="{% url 'referral:list_appointments' filter='today' %}">Today</a>
+        </li>
+        <li>
+          <a href="{% url 'referral:list_appointments' filter='week' %}">This Week</a>
+        </li>
+        <li>
+          <a href="{% url 'referral:list_appointments' filter='month' %}">This Month</a>
+        </li>
+        <li>
+          <a href="{% url 'referral:list_appointments' filter='upcoming' %}">Upcoming</a>
         </li>
       </ul>
     </li>

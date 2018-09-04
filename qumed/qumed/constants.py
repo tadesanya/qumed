@@ -17,3 +17,11 @@ REFERRAL_STATUS = (
     ('accepted', 'ACCEPTED'),
     ('rejected', 'REJECTED'),
 )
+
+APPOINTMENT_FILTER = {
+    'all': 'all',
+    'today': 'today',
+    'week': 'week',
+    'month': 'month',
+    'upcoming': 'upcoming'
+}
