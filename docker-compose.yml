@@ -1,0 +1,22 @@
+version: "3"
+services:
+  db:
+    image: postgres:9.4
+    environment:
+      POSTGRES_PASSWORD: qumed
+      POSTGRES_USER: qumed
+      POSTGRES_DB: qumed
+  web:
+    image: tosinade/qumedweb:1.0
+    command: bash -c "python qumed/manage.py makemigrations && python qumed/manage.py migrate && python qumed/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/qumed
+    ports:
+      - "8000:8000"
+    environment:
+      - "DATABASE_HOST=db"
+      - "DATABASE_NAME=qumed"
+      - "DATABASE_USER=qumed"
+      - "DATABASE_PASSWORD=qumed"
+    depends_on:
+      - db
