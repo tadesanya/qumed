@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: qumed
   web:
     image: tosinade/qumedweb:1.0
-    command: bash -c "python qumed/manage.py makemigrations && python qumed/manage.py migrate && python qumed/manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python qumed/manage.py makemigrations && python qumed/manage.py migrate && python qumed/manage.py collectstatic && python qumed/manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/qumed
     ports:
