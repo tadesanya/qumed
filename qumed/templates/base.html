@@ -18,7 +18,9 @@
   <!-- Custom styles for this template-->
   <link href="{% static 'css/sb-admin.css' %}" rel="stylesheet">
   <!-- Custom local CSS -->
-  {% block custom_style %}{% endblock custom_style %}
+  {% block custom_style %}
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  {% endblock custom_style %}
 </head>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">

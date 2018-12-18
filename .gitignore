@@ -17,6 +17,9 @@ qumed/*/staticfiles/*
 # media
 qumed/*/media/*
 
+# staticfiles
+qumed/staticfiles/*
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
