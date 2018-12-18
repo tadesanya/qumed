@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: qumed
   web:
     build: .
-    command: bash -c "python qumed/manage.py makemigrations && python qumed/manage.py migrate && python qumed/manage.py collectstatic --noinput && python qumed/manage.py shell -c 'from django.contrib.auth import get_user_model; User = get_user_model(); superuser = User.objects.get_or_create(username=\"admin\", defaults={\"email\":\"admin@example.com\", \"password\":\"adminpass\", \"is_superuser\":True})' && python qumed/manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python qumed/manage.py makemigrations && python qumed/manage.py migrate && python qumed/manage.py collectstatic --noinput && python qumed/manage.py shell -c 'from django.contrib.auth import get_user_model; User = get_user_model(); superuser = User.objects.get_or_create(username=\"admin\", defaults={\"email\":\"admin@example.com\", \"password\":\"adminpass\", \"is_superuser\":True})' && python qumed/manage.py shell -c 'from django.contrib.sites.models import Site; site = Site.objects.get(id=1); site.name=\"localhost\"; site.domain=\"127.0.0.1:8000\"; site.save()' && python qumed/manage.py runserver"
     volumes:
       - .:/qumed
     ports:
@@ -18,11 +18,5 @@ services:
       - "DATABASE_NAME=qumed"
       - "DATABASE_USER=qumed"
       - "DATABASE_PASSWORD=qumed"
-    logging:
-      driver: awslogs
-      options: 
-        awslogs-group: qumed-staging
-        awslogs-region: us-east-1
-        awslogs-stream-prefix: qumed-staging
     depends_on:
       - db

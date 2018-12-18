@@ -174,3 +174,6 @@ MESSAGE_TAGS = {
 # DATETIME settings
 DATETIME_FORMAT = 'N j, Y, P'
 DATETIME_INPUT_FORMATS = ['%Y-%m-%d %H:%M:%S', '%m/%d/%Y %I:%M %p', '%Y-%m-%d %H:%M']
+
+# Sites
+SITE_ID = 1
