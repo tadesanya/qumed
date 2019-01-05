@@ -1,7 +1,7 @@
 # Qumed
 
-### Setup
-Create a virtualenvwrapper with python3 as the default python exe:
+### Setup on development environment
+Create a virtual environment `qumed` with virtualenvwrapper, using python3 as the default python exe:
 `mkvirtualenv --python=/usr/bin/python3 qumed`
 
 Clone the repo:
@@ -27,13 +27,9 @@ EMAIL_HOST_PASSWORD=XXXXXXXXXXXXXXXXXXX
 EMAIL_USE_TLS=True
 ```
 
-While in your virtualenvwrapper, install all the packages needed
-`pip install git+git://github.com/tadesanya/django-tempus-dominus.git#egg=django_tempus_dominus`
-`pip install -r requirements.txt`
+To start the server, in the root directory (the folder named 'qumed' that has the files Dockerfile, docker-compose.yml and README.md in it), run the command `docker-compose up`. Go to `localhost:8000` or `0.0.0.0:8000` in your browser to view the app.
 
-Run Migragrations `python qumed/manage.py migrate`
-
-Start server `python qumed/manage.py runserver`
+To shut down the server, in the root directory either run the command `docker-compose down` or use the keyboard shortcut `CTRL+C`
 
 ### Structure
 The Repo has a main branch `master`. 
