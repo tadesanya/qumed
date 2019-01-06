@@ -1,0 +1,1 @@
+web: gunicorn qumed.wsgi —-log-file -
