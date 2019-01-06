@@ -1,1 +1,1 @@
-web: gunicorn qumed.qumed.wsgi —-log-file -
+web: gunicorn qumedhealthcare.wsgi —-log-file -
