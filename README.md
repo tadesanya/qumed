@@ -11,7 +11,7 @@ This uses SSH, read this to setup SSH on your system: https://confluence.atlassi
 Alternatively you can use HTTPS:
 `git clone https://tadesanya@bitbucket.org/qumed/qumed.git`
 
-Setup a postgres database
+Install Docker (https://www.docker.com/get-started)
 
 Create an `.env` file in the base directory of the project (usually the directory that has the manage.py file in it).
 Here you set environment variables:
