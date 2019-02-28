@@ -53,7 +53,7 @@
 
   <!-- Create Practice Modal -->
   <div class="modal fade" id="createPracticeModal" tabindex="-1" role="dialog" aria-labelledby="createPracticeTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="createPracticeTitle">Create A Practice</h5>
@@ -63,19 +63,21 @@
         </div>
         <form action="{% url 'referral:create_practice' %}" method="post">
         {% csrf_token %}
-        {% for hidden_field in practice_form.hidden_fields %}
-          {{ hidden_field }}
-        {% endfor %}
+        <div class="modal-body">
+          {% for hidden_field in practice_form.hidden_fields %}
+            {{ hidden_field }}
+          {% endfor %}
 
-        {% for field in practice_form.visible_fields %}
-          <div class="form-group">
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field|add_class:'form-control' }}
-            {% for error in field.errors %}
-              <span class="help-block">{{ error }}</span>
-            {% endfor %}
-          </div>
-        {% endfor %}
+          {% for field in practice_form.visible_fields %}
+            <div class="form-group">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field|add_class:'form-control' }}
+              {% for error in field.errors %}
+                <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
 
         <div class="modal-footer">
           <button type="reset" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>

@@ -54,7 +54,7 @@ class PatientsListView(LoginRequiredMixin, ListView):
 
 class PatientCreateView(LoginRequiredMixin, CreateView):
     model = Patient
-    fields = ['mrn', 'name', 'address', 'email', 'telephone']
+    fields = ['mrn', 'name', 'address', 'city', 'state', 'zipcode', 'email', 'telephone']
     template_name = 'referral/create_patient.html'
     success_url = reverse_lazy('referral:view_patients')
 

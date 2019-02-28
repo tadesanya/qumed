@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'referral',
     'account',
     'widget_tweaks',
+    'localflavor',
 ]
 
 MIDDLEWARE = [

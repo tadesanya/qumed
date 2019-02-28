@@ -4,6 +4,7 @@ from datetime import date
 from django.db import models
 from django.contrib.auth import get_user_model
 from phonenumber_field.modelfields import PhoneNumberField
+from localflavor.us.models import USStateField, USZipCodeField
 
 from qumed.constants import CHAR_LENGTH_16, CHAR_LENGTH_32, CHAR_LENGTH_128, APPOINTMENT_STATUS, REFERRAL_STATUS
 
@@ -12,6 +13,9 @@ class Practice(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField('Name', max_length=CHAR_LENGTH_32, unique=True)
     address = models.CharField('Address', max_length=CHAR_LENGTH_128)
+    city = models.CharField('City', max_length=CHAR_LENGTH_32, unique=False)
+    state = USStateField('State')
+    zipcode = USZipCodeField('ZipCode')
     email = models.EmailField('Email')
     telephone = PhoneNumberField('Telephone')
     created_by = models.ForeignKey(get_user_model(),
@@ -30,6 +34,9 @@ class Patient(models.Model):
     mrn = models.IntegerField('Medical Record Number', unique=True)
     name = models.CharField('Name', max_length=CHAR_LENGTH_32, unique=True)
     address = models.CharField('Address', max_length=CHAR_LENGTH_128)
+    city = models.CharField('City', max_length=CHAR_LENGTH_32, unique=False)
+    state = USStateField('State')
+    zipcode = USZipCodeField('ZipCode')
     email = models.EmailField('Email')
     telephone = PhoneNumberField('Telephone')
 

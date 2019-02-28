@@ -16,6 +16,9 @@
         <th scope="col">MRN</th>
         <th scope="col">Name</th>
         <th scope="col">Address</th>
+        <th scope="col">City</th>
+        <th scope="col">State</th>
+        <th scope="col">ZipCode</th>
         <th scope="col">Email</th>
         <th scope="col">Telephone</th>
         <th scope="col"></th>
@@ -28,6 +31,9 @@
           <td>{{patient.mrn}}</td>
           <td><a href="{% url 'referral:patient_detail' pk=patient.id %}">{{patient.name}}</a></td>
           <td>{{patient.address}}</td>
+          <td>{{patient.city}}</td>
+          <td>{{patient.state}}</td>
+          <td>{{patient.zipcode}}</td>
           <td>{{patient.email}}</td>
           <td>{{patient.telephone}}</td>
           <td><a href="{% url 'referral:patient_detail' pk=patient.id %}"><i class="fa fa-address-card" aria-hidden="true"></i></a></td>
