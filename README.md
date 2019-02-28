@@ -31,6 +31,8 @@ To start the server, in the root directory (the folder named 'qumed' that has th
 
 To shut down the server, in the root directory either run the command `docker-compose down` or use the keyboard shortcut `CTRL+C`
 
+To run commands, use `docker-compose exec web <your-command>`. e.g `docker-compose exec web pip install django` or `docker-compose exec web python manage.py migrate`.
+
 ### Structure
 The Repo has a main branch `master`. 
 All other branches checkout from it.

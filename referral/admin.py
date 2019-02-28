@@ -3,11 +3,11 @@ from .models import Practice, Patient, Referral, TempReferral, Appointment
 
 
 class PracticeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'address', 'email', 'telephone', 'created_by')
+    list_display = ('id', 'name', 'address', 'city', 'state', 'zipcode', 'email', 'telephone', 'created_by')
 
 
 class PatientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'mrn', 'name', 'address', 'email', 'telephone', 'creator_practice', 'current_practice')
+    list_display = ('id', 'mrn', 'name', 'address', 'city', 'state', 'zipcode', 'email', 'telephone', 'creator_practice', 'current_practice')
 
 
 class ReferralAdmin(admin.ModelAdmin):

@@ -54,6 +54,18 @@
       <div class="col-md-3"><p><strong>Email: </strong>{{patient.email}}</p></div>
       <div class="col-md-6"><p><strong>Address: </strong>{{patient.address}}</p></div>
     </div>
+
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <p><strong>City: </strong>{{patient.city}}</p>
+      </div>
+      <div class="col-md-3">
+        <p><strong>Zipcode: </strong>{{patient.zipcode}}</p>
+      </div>
+      <div class="col-md-6">
+        <p><strong>State: </strong>{{patient.state}}</p>
+      </div>
+    </div>
   </div>
   <div class="tab-pane fade" id="pills-referral" role="tabpanel" aria-labelledby="pills-referral-tab">
     {% if patient.referral_set.all.exists %}
