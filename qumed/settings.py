@@ -177,3 +177,6 @@ DATETIME_INPUT_FORMATS = ['%Y-%m-%d %H:%M:%S', '%m/%d/%Y %I:%M %p', '%Y-%m-%d %H
 
 # Sites
 SITE_ID = 1
+
+# Django Phone Number
+PHONENUMBER_DEFAULT_REGION = 'US'
