@@ -7,16 +7,19 @@ class PracticeAdmin(admin.ModelAdmin):
 
 
 class PatientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'mrn', 'name', 'address', 'city', 'state', 'zipcode', 'email', 'telephone', 'creator_practice', 'current_practice')
+    list_display = ('id', 'mrn', 'name', 'address', 'city', 'state', 'zipcode', 'email', 'telephone', 'dob',
+                    'creator_practice', 'current_practice')
 
 
 class ReferralAdmin(admin.ModelAdmin):
     list_display = ('id', 'patient', 'date_referred', 'reason_for_referral', 'notes', 'referral_status', 'referred_by',
                     'referred_to')
 
+
 class TempReferralAdmin(admin.ModelAdmin):
     list_display = ('id', 'patient', 'date_referred', 'reason_for_referral', 'notes', 'referred_by',
                     'referred_to_email')
+
 
 class AppointmentAdmin(admin.ModelAdmin):
     list_display = ('appointment_status', 'first_attempt', 'second_attempt', 'third_attempt', 'appointment_date',

@@ -39,6 +39,7 @@ class Patient(models.Model):
     zipcode = USZipCodeField('ZipCode')
     email = models.EmailField('Email')
     telephone = PhoneNumberField('Telephone')
+    dob = models.DateField('Date of Birth')
 
     creator_practice = models.ForeignKey(Practice,
                                          on_delete=models.CASCADE,
