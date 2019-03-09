@@ -7,13 +7,60 @@ from qumed.constants import REFERRAL_STATUS, APPOINTMENT_STATUS
 
 # model forms
 PracticeForm = modelform_factory(Practice, fields=('name', 'address', 'city', 'state', 'zipcode', 'email', 'telephone'))
-PatientForm = modelform_factory(Patient, fields=('mrn', 'name', 'address', 'city', 'state', 'zipcode', 'email',
-                                                 'telephone', 'dob'))
 ReferralForm = modelform_factory(Referral, fields=('patient', 'notes', 'referred_by',
                                                    'referred_to', 'reason_for_referral'))
 TempReferralForm = modelform_factory(TempReferral, exclude=())
-AppointmentForm = modelform_factory(Appointment, fields=('appointment_status', 'first_attempt', 'second_attempt',
-                                                         'third_attempt', 'appointment_date'))
+
+
+class PatientForm(forms.ModelForm):
+    class Meta:
+        model = Patient
+        fields = ['mrn', 'name', 'address', 'city', 'state', 'zipcode', 'email', 'telephone', 'dob']
+
+    def __init__(self, *args, **kwargs):
+        super(PatientForm, self).__init__(*args, **kwargs)
+        self.fields['dob'].widget.attrs.update({
+            'class': 'datetimepicker-input',
+            'autocomplete': 'off',
+            'data-toggle': 'datetimepicker',
+            'data-target': '#{}'.format(self['dob'].id_for_label)
+        })
+
+
+class AppointmentForm(forms.ModelForm):
+    class Meta:
+        model = Appointment
+        fields = ['appointment_status', 'first_attempt', 'second_attempt', 'third_attempt', 'appointment_date']
+
+    def __init__(self,  *args, **kwargs):
+        super(AppointmentForm, self).__init__( *args, **kwargs)
+        self.fields['first_attempt'].widget.attrs.update({
+            'class': 'datetimepicker-input',
+            'autocomplete': 'off',
+            'data-toggle': 'datetimepicker',
+            'data-target': '#{}'.format(self['first_attempt'].id_for_label)
+        })
+
+        self.fields['second_attempt'].widget.attrs.update({
+            'class': 'datetimepicker-input',
+            'autocomplete': 'off',
+            'data-toggle': 'datetimepicker',
+            'data-target': '#{}'.format(self['second_attempt'].id_for_label)
+        })
+
+        self.fields['third_attempt'].widget.attrs.update({
+            'class': 'datetimepicker-input',
+            'autocomplete': 'off',
+            'data-toggle': 'datetimepicker',
+            'data-target': '#{}'.format(self['third_attempt'].id_for_label)
+        })
+
+        self.fields['appointment_date'].widget.attrs.update({
+            'class': 'datetimepicker-input',
+            'autocomplete': 'off',
+            'data-toggle': 'datetimepicker',
+            'data-target': '#{}'.format(self['appointment_date'].id_for_label)
+        })
 
 
 # non model forms
@@ -31,3 +78,33 @@ class AppointmentCreateForm(forms.Form):
     second_attempt = forms.DateTimeField(required=False)
     third_attempt = forms.DateTimeField(required=False)
     appointment_date = forms.DateTimeField(required=False)
+
+    def __init__(self,  *args, **kwargs):
+        super(AppointmentForm, self).__init__( *args, **kwargs)
+        self.fields['first_attempt'].widget.attrs.update({
+            'class': 'datetimepicker-input',
+            'autocomplete': 'off',
+            'data-toggle': 'datetimepicker',
+            'data-target': '#{}'.format(self['first_attempt'].id_for_label)
+        })
+
+        self.fields['second_attempt'].widget.attrs.update({
+            'class': 'datetimepicker-input',
+            'autocomplete': 'off',
+            'data-toggle': 'datetimepicker',
+            'data-target': '#{}'.format(self['second_attempt'].id_for_label)
+        })
+
+        self.fields['third_attempt'].widget.attrs.update({
+            'class': 'datetimepicker-input',
+            'autocomplete': 'off',
+            'data-toggle': 'datetimepicker',
+            'data-target': '#{}'.format(self['third_attempt'].id_for_label)
+        })
+
+        self.fields['appointment_date'].widget.attrs.update({
+            'class': 'datetimepicker-input',
+            'autocomplete': 'off',
+            'data-toggle': 'datetimepicker',
+            'data-target': '#{}'.format(self['appointment_date'].id_for_label)
+        })

@@ -9,9 +9,11 @@ app_name = 'referral'
 
 urlpatterns = [
     path('practice/create/', views.CreatePracticeView.as_view(), name='create_practice'),
+
     path('patients/view/', views.PatientsListView.as_view(), name='view_patients'),
     path('patient/create/', views.PatientCreateView.as_view(), name='create_patient'),
     path('patient/<int:pk>/', views.PatientDetailView.as_view(), name='patient_detail'),
+    path('patient/<int:pk>/update/', views.PatientUpdateView.as_view(), name='update_patient'),
 
     path('create/<int:pk>/', views.ReferralCreateView.as_view(), name='create_referral'),
     path('view/<str:viewset>/', views.ReferralListView.as_view(), name='list_referrals'),
