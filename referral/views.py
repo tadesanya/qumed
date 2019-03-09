@@ -14,7 +14,7 @@ from django.contrib.auth import login
 from django.utils import timezone
 
 from .forms import PracticeForm, ReferralForm, AcceptRejectForm, TempReferralForm, AppointmentCreateForm, \
-    AppointmentForm
+    AppointmentForm, PatientForm
 from .models import Patient, Practice, Referral, TempReferral, Appointment
 from qumed.constants import PAGINATE_30, REFERRAL_STATUS, APPOINTMENT_FILTER
 from account.forms import CustomUserCreationForm
@@ -54,7 +54,7 @@ class PatientsListView(LoginRequiredMixin, ListView):
 
 class PatientCreateView(LoginRequiredMixin, CreateView):
     model = Patient
-    fields = ['mrn', 'name', 'address', 'city', 'state', 'zipcode', 'email', 'telephone', 'dob']
+    form_class = PatientForm
     template_name = 'referral/create_patient.html'
     success_url = reverse_lazy('referral:view_patients')
 
@@ -84,6 +84,26 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
         context['appointments'] = appointments
         context['appointment_form'] = AppointmentCreateForm(initial={'practice': practice.id, 'patient': patient.id})
         kwargs.update(context)
+        return super().get_context_data(**kwargs)
+
+
+class PatientUpdateView(LoginRequiredMixin, UpdateView):
+    model = Patient
+    template_name = 'referral/update_patient.html'
+    form_class = PatientForm
+
+    def form_valid(self, form):
+        message = 'Appointment updated.'
+        messages.success(self.request, message)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        url = self.request.META.get('HTTP_REFERER')
+        return url
+
+    def get_context_data(self, **kwargs):
+        self.object = self.get_object()
+        kwargs['patient'] = self.object
         return super().get_context_data(**kwargs)
 
 

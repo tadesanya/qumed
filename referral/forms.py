@@ -7,13 +7,28 @@ from qumed.constants import REFERRAL_STATUS, APPOINTMENT_STATUS
 
 # model forms
 PracticeForm = modelform_factory(Practice, fields=('name', 'address', 'city', 'state', 'zipcode', 'email', 'telephone'))
-PatientForm = modelform_factory(Patient, fields=('mrn', 'name', 'address', 'city', 'state', 'zipcode', 'email',
-                                                 'telephone', 'dob'))
+# PatientForm = modelform_factory(Patient, fields=('mrn', 'name', 'address', 'city', 'state', 'zipcode', 'email',
+#                                                  'telephone', 'dob'))
 ReferralForm = modelform_factory(Referral, fields=('patient', 'notes', 'referred_by',
                                                    'referred_to', 'reason_for_referral'))
 TempReferralForm = modelform_factory(TempReferral, exclude=())
 AppointmentForm = modelform_factory(Appointment, fields=('appointment_status', 'first_attempt', 'second_attempt',
                                                          'third_attempt', 'appointment_date'))
+
+
+class PatientForm(forms.ModelForm):
+    class Meta:
+        model = Patient
+        fields = ['mrn', 'name', 'address', 'city', 'state', 'zipcode', 'email', 'telephone', 'dob']
+
+    def __init__(self, *args, **kwargs):
+        super(PatientForm, self).__init__(*args, **kwargs)
+        self.fields['dob'].widget.attrs.update({
+            'class': 'datetimepicker-input',
+            'autocomplete': 'off',
+            'data-toggle': 'datetimepicker',
+            'data-target': '#{}'.format(self['dob'].id_for_label)
+        })
 
 
 # non model forms

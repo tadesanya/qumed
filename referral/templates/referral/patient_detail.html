@@ -42,10 +42,12 @@
 </ul>
 
 <div class="tab-content" id="pills-tabContent">
+  <!-- Patient Info -->
   <div class="tab-pane fade show active" id="pills-info" role="tabpanel" aria-labelledby="pills-info-tab">
     <div class="row mb-3">
       <div class="col-md-12">
-        <ul class="list-group">
+        <a href="{% url 'referral:update_patient' pk=patient.id %}" class="btn btn-outline-primary btn-sm">Edit Details</a>
+        <ul class="list-group my-3">
           <li class="list-group-item"><p><strong>ID: </strong>{{patient.id}}</p></li>
           <li class="list-group-item"><p><strong>Name: </strong>{{patient.name}}</p></li>
           <li class="list-group-item"><p><strong>MRN: </strong>{{patient.mrn}}</p></li>
@@ -57,9 +59,11 @@
           <li class="list-group-item"><p><strong>State: </strong>{{patient.state}}</p></li>
           <li class="list-group-item"><p><strong>Date Of Birth: </strong>{{patient.dob}}</p></li>
         </ul>
+        <a href="{% url 'referral:update_patient' pk=patient.id %}" class="btn btn-outline-primary btn-sm">Edit Details</a>
       </div>
     </div>
   </div>
+  <!-- Patient Referrals -->
   <div class="tab-pane fade" id="pills-referral" role="tabpanel" aria-labelledby="pills-referral-tab">
     {% if patient.referral_set.all.exists %}
       <div class="row my-3">
@@ -97,6 +101,7 @@
       </div>
     {% endif %}   
   </div>
+  <!-- Patient Appointments -->
   <div class="tab-pane fade" id="pills-appointment" role="tabpanel" aria-labelledby="pills-appointment-tab">
     <ul class="nav justify-content-end">
       <li class="nav-item">

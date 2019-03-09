@@ -12,65 +12,48 @@
   <div class="row">
     <div class="col-md-6">
       <form method="post" action="">
-          <!-- {% csrf_token %}
-          {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-          {% endfor %}
-
-          {% for field in form.visible_fields %}
-            <div class="form-group">
-              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-              {{ field|add_class:'form-control' }}
-              {% for error in field.errors %}
-                <span class="help-block">{{ error }}</span>
-              {% endfor %}
-            </div>
-          {% endfor %} -->
-
         {% csrf_token %}
-        
+
         {% for hidden_field in form.hidden_fields %}
-          {{ hidden_field }}
+        {{ hidden_field }}
         {% endfor %}
         
         {% if form.non_field_errors %}
-          <div class="alert alert-danger" role="alert">
-            {% for error in form.non_field_errors %}
-            {{ error }}
-            {% endfor %}
-          </div>
+        <div class="alert alert-danger" role="alert">
+          {% for error in form.non_field_errors %}
+          {{ error }}
+          {% endfor %}
+        </div>
         {% endif %}
         
         {% for field in form.visible_fields %}
-          <div class="form-group">
-            {% with data_target='#'|add:field.id_for_label %}
-            {{ field.label_tag }}
-          
-            {% if form.is_bound %}
-              {% if field.errors %}
-                {% render_field field class="form-control is-invalid datetimepicker-input" data-toggle="datetimepicker" data-target=data_target autocomplete="off" %}
-                {% for error in field.errors %}
-                  <div class="invalid-feedback">
-                    {{ error }}
-                  </div>
-                {% endfor %}
-              {% else %}
-                {% render_field field class="form-control is-valid datetimepicker-input" data-toggle="datetimepicker" data-target=data_target autocomplete="off" %}
-              {% endif %}
-            {% else %}
-              {% render_field field class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target=data_target autocomplete="off" %}
-            {% endif %}
-          
-            {% if field.help_text %}
-              <small class="form-text text-muted">{{ field.help_text }}</small>
-            {% endif %}
-            {% endwith %}
+        <div class="form-group">
+          {{ field.label_tag }}
+        
+          {% if form.is_bound %}
+          {% if field.errors %}
+          {% render_field field|append_attr:"class:form-control is-invalid" %}
+          {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
           </div>
+          {% endfor %}
+          {% else %}
+          {% render_field field|append_attr:"class:form-control is-valid" %}
+          {% endif %}
+          {% else %}
+          {% render_field field|append_attr:"class:form-control" %}
+          {% endif %}
+        
+          {% if field.help_text %}
+          <small class="form-text text-muted">{{ field.help_text }}</small>
+          {% endif %}
+        </div>
         {% endfor %}
 
-          <div class="form-group">
-            <input class="btn btn-primary" type="submit" value="Save" />
-          </div>
+        <div class="form-group">
+          <input class="btn btn-primary" type="submit" value="Save" />
+        </div>
       </form>
     </div>
   </div>
