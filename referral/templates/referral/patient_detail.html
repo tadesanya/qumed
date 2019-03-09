@@ -114,46 +114,44 @@
       {# Create appointment form #}
       <form action="{% url 'referral:create_appointment' %}" method="post">
         {% csrf_token %}
-        {% for hidden_field in appointment_form.hidden_fields %}
-          {{ hidden_field }}
+
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
         {% endfor %}
 
-        {% if appointment_form.non_field_errors %}
-          <div class="alert alert-danger" role="alert">
-            {% for error in appointment_form.non_field_errors %}
-              {{ error }}
-            {% endfor %}
-          </div>
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in form.non_field_errors %}
+                {{ error }}
+                {% endfor %}
+            </div>
         {% endif %}
 
-        {% for field in appointment_form.visible_fields %}
-          <div class="form-group row">
-            <label for="{{ field.id_for_label }}" class="col-form-label col-sm-2 col-form-label-sm">{{ field.label }}</label>
+        {% for field in form.visible_fields %}
+            <div class="form-group">
+                {{ field.label_tag }}
 
-            <div class="col-sm-6">
-              {% with data_target='#'|add:field.id_for_label %}
-                {% if appointment_form.is_bound %}
-                  {% if field.errors %}
-                    {% render_field field class="form-control form-control-sm is-invalid datetimepicker-input" data-toggle="datetimepicker" data-target=data_target autocomplete="off" %}
-                    {% for error in field.errors %}
-                      <div class="invalid-feedback">
-                        {{ error }}
-                      </div>
-                    {% endfor %}
-                  {% else %}
-                    {% render_field field class="form-control form-control-sm is-valid datetimepicker-input" data-toggle="datetimepicker" data-target=data_target autocomplete="off" %}
-                  {% endif %}
+                {% if form.is_bound %}
+                    {% if field.errors %}
+                        {% render_field field|append_attr:"class:form-control is-invalid" %}
+                        {% for error in field.errors %}
+                            <div class="invalid-feedback">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {% render_field field|append_attr:"class:form-control is-valid" %}
+                    {% endif %}
                 {% else %}
-                  {% render_field field class="form-control form-control-sm datetimepicker-input" data-toggle="datetimepicker" data-target=data_target autocomplete="off" %}
+                    {% render_field field|append_attr:"class:form-control" %}
                 {% endif %}
 
                 {% if field.help_text %}
-                  <small class="form-text text-muted">{{ field.help_text }}</small>
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
                 {% endif %}
-              {% endwith %}
             </div>
-          </div>
         {% endfor %}
+        
         <div class="form-group">
           <button type="reset" class="btn btn-danger" data-toggle="collapse" href="#createAppointment" role="button" aria-expanded="false" aria-controls="createAppointment">
             <i class="fa fa-ban" aria-hidden="true"></i> Cancel
